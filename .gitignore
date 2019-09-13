@@ -1,0 +1,7 @@
+dist
+node_modules
+**/__pycache__
+mezmur/staging
+pnpm-lock.yaml
+**/*.session
+mezmur/mez.json
