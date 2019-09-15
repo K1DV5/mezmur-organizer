@@ -8,7 +8,7 @@ def build_basic():
     with open('../src/basic-template.html', encoding='utf-8') as file:
         template = file.read()
 
-    with open('mez.json', encoding='utf-8') as file:
+    with open('mez-data.json', encoding='utf-8') as file:
         data = load(file)
 
 
@@ -20,14 +20,14 @@ def build_basic():
 
     for category, cat_data in data['data'].items():
         category_id = category.replace(" ", "-")
-        toc += f'<a class="toc-cat" href="#{category_id}">{category}</a>'
-        cat_head = f'<h2 id={category_id}>{category}</h2>'
+        toc += f'<a class="toc-cat" id="toc:{category_id}" href="#{category_id}">{category}</a>'
+        cat_head = f'<h2 id={category_id}><a href="#toc:{category_id}">{category}</a></h2>'
         cat_body = ''
 
-        for mez in cat_data['data']:
+        for title, mez in cat_data['data'].items():
             mez_id = mez['id']
-            toc += f'<a class="toc-mez" href="#{mez_id}">{mez["title"]}</a>'
-            mez_head = f'<h3 id={mez_id}>{mez["title"]}</h3>'
+            toc += f'<a class="toc-mez" id="toc:{mez_id}" href="#{mez_id}">{title}</a>'
+            mez_head = f'<h3 id={mez_id}><a href="#toc:{mez_id}">{title}</a></h3>'
 
             mez_body = '<div class="mez-body">' + mez['body'].replace('\n', '<br />') + '</div>'
             cat_body += mez_head + mez_body
