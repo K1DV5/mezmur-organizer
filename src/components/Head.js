@@ -15,7 +15,7 @@ export default (props) => {
     Title = Title.includes('/') ? Title.split('/').slice(-2, -1) : Title
     return (
         <div style={{width: '100%'}}>
-            <AppBar position="static" color="primary">
+            <AppBar position="fixed" color="primary">
                 <ToolBar>
                     {props.searchOpen? (
                         <InputBase
