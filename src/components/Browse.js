@@ -15,7 +15,7 @@ export default (props) => {
             props.visibleItems !== []? (
             <List>
                 {props.visibleItems.map((mez, index) =>
-                    <ListItem key={index} button dense onClick={() => gotoPage(`${mez.category}/${index}`)} >
+                    <ListItem key={index} button dense onClick={() => gotoPage(`${mez.category}/${mez.title.replace(' ', '-')}`)} >
                         <ListItemText
                             primary={mez.title}
                             secondary={
@@ -32,29 +32,34 @@ export default (props) => {
             ) : <div>No results</div>
         )
     } else if (categories.includes(activePage)) { // list mez in category
+        let titles = Object.keys(data[activePage].data)
         return (
             <List>
-                {data[activePage].data.map((mez, index) => (
-                    <ListItem key={index} button dense onClick={() => gotoPage(`${activePage}/${index}`)} >
-                        <ListItemText
-                            primary={mez.title}
-                            secondary={
-                                <React.Fragment>
-                                    {mez.date + '፣ በ '}
-                                    <a href={mez.sender_link} style={{fontSize: 'smaller', textDecoration: 'none'}}>
-                                        {mez.sender_name}
-                                    </a>
-                                </React.Fragment>
-                            } />
-                    </ListItem>
-                ))}
+                {titles.map((title, index) => {
+                    let mez = data[activePage].data[title]
+                    return (
+                        <ListItem key={index} button dense onClick={() => gotoPage(`${activePage}/${title.replace(' ', '-')}`)} >
+                            <ListItemText
+                                primary={title}
+                                secondary={
+                                    <React.Fragment>
+                                        {mez.date + '፣ በ '}
+                                        <a href={mez.sender_link} style={{fontSize: 'smaller', textDecoration: 'none'}}>
+                                            {mez.sender_name}
+                                        </a>
+                                    </React.Fragment>
+                                } />
+                        </ListItem>
+                    )})}
             </List>
         )
     } else if (activePage) { // for viewing mez
-        let [category, mez] = activePage.split('/')
-        if (category && mez && categories.includes(category)) {
-            let {title, body} = data[category].data[Number(mez)]
-            if (title) {
+        let [category, title] = activePage.split('/')
+        if (category && title && categories.includes(category)) {
+            title = title.replace('-', ' ')
+            let mezData = data[category].data[title]
+            let body = mezData.body
+            if (body) {
                 return <Viewer title={title} body={body} />
             }
         }
@@ -63,7 +68,7 @@ export default (props) => {
         <List>
             {categories.map((cat, index) => (
                 <ListItem key={index} button dense onClick={() => gotoPage(cat)} >
-                    <ListItemText primary={cat} secondary={data[cat].count + (data[cat].count_eng > 1? ' መዝሙሮች' : ' መዝሙር')} />
+                    <ListItemText primary={cat} secondary={data[cat].count + (data[cat].count_eng > 1 ? ' መዝሙሮች' : ' መዝሙር')} />
                 </ListItem>
             ))}
         </List>

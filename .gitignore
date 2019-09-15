@@ -4,4 +4,4 @@ node_modules
 mezmur/staging
 pnpm-lock.yaml
 **/*.session
-mezmur/mez.json
+local-data

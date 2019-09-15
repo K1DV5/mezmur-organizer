@@ -1,11 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Search from './components/Search'
-import mez from '../mezmur/mez.json'
+import Head from './components/Head'
 import filterEngData from './amhMatch.json'
 import Browse from './components/Browse'
 
-window.mezmurData = mez
+if (typeof mezmurData === 'undefined') {
+    // the data is from the template html, has the following form:
+    var mezmurData = {
+        date: '-',
+        data: {},
+        count: 0,
+        last_id: '-',
+        count: '-'
+    }
+}
 console.info('\nThe data is in the variable "mezmurData".\n"copy(mezmurData)" to copy it to the clipboard.\n\n')
 
 class App extends React.Component {
@@ -18,7 +26,7 @@ class App extends React.Component {
             barTitle: this.homeTitle,
             visibleItems: null
         }
-        this.filterable = this.getFilterableData(mez)
+        this.filterable = this.getFilterableData(mezmurData)
         this.getFilterableData = this.getFilterableData.bind(this)
         this.filterItems = this.filterItems.bind(this)
         this.gotoPage = this.gotoPage.bind(this)
@@ -60,11 +68,12 @@ class App extends React.Component {
         let filterableList = []
         let data = main.data
         for (let category of Object.keys(data)) {
-            for (let m of data[category].data) {
+            for (let title of Object.keys(data[category].data)) {
                 filterableList.push({
-                    ...m,
+                    title,
+                    ...data[category].data[title],
                     category: category,
-                    titleEng: this.transliterate(m.title)
+                    titleEng: this.transliterate(title)
                 })
             }
         }
@@ -92,7 +101,7 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <Search
+                <Head
                     style={{position: 'relative'}}
                     back={this.back}
                     searchOpen={this.state.searchOpen}
@@ -100,12 +109,12 @@ class App extends React.Component {
                     Title={this.state.barTitle}
                     filterItems={this.filterItems}
                     homeTitle={this.homeTitle}
-                    date={mez.date}
-                    count={mez.count}
+                    date={mezmurData.date}
+                    count={mezmurData.count}
                 />
-                <div style={{padding: '.25em'}}>
+                <div style={{padding: '.25em', marginTop: 56}}>
                     <Browse
-                        data={mez}
+                        data={mezmurData}
                         gotoPage={this.gotoPage}
                         activePage={this.state.activePage}
                         visibleItems={this.state.visibleItems}
