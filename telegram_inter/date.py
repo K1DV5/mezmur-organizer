@@ -1,6 +1,6 @@
 from datetime import date
 from math import floor, ceil
-from number import geez_num
+from .number import geez_num
 
 # anchor dates: dates end of four year periods
 Feb29 = date(2020, 2, 29)
