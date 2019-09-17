@@ -14,7 +14,7 @@ jobs:
     #  run: echo Hello, world!
     #- name: Run a multi-line script
       - name: List the directory and other info
-      - run: |
+        run: |
             ls
             pip --version
             python --version
