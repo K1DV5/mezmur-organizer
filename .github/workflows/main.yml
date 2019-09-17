@@ -8,17 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    # - name: checkout the repo
-    # - uses: actions/checkout@v1
-    #- name: Run a one-line script
-    #  run: echo Hello, world!
-    #- name: Run a multi-line script
-      - name: List the directory and other info
-        run: |
+     - name: checkout the repo
+       uses: actions/checkout@v1
+     - name: List the directory and other info
+       run: |
             ls
-            pip --version
-            python --version
             pip3 --version
             python3 --version
-            node --version
-            npm --version
