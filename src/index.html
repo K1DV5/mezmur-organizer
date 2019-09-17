@@ -10,9 +10,37 @@ body {
     margin: 0;
 }
     </style>
-    {mezmurData}
+
+    <!-- for the basic version -->
+    <noscript>
+        <style>
+a {
+    color: #158;
+    text-decoration: none;
+}
+
+.toc-cat {
+    display: block;
+}
+
+.toc-mez {
+    display: block;
+    margin-left: 2em;
+}
+        </style>
+    </noscript>
+    {{mezmurData}}
 </head>
 <body>
     <div id="app"></div>
+
+<!-- the basic version -->
+    <noscript>
+        <h1 class="title">መዝሙር</h1>
+        <small class="subtitle">{{basicSubtitle}}</small>
+        <nav class="toc">{{basicToc}}</nav>
+        <div class="content">{{basicMain}}</div>
+    </noscript>
+
 </body>
 </html>

@@ -4,16 +4,7 @@ import Head from './components/Head'
 import filterEngData from './amhMatch.json'
 import Browse from './components/Browse'
 
-if (typeof mezmurData === 'undefined') {
-    // the data is from the template html, has the following form:
-    var mezmurData = {
-        date: '-',
-        data: {},
-        count: 0,
-        last_id: '-',
-        count: '-'
-    }
-}
+// the data is from the template html, has the following form:
 console.info('\nThe data is in the variable "mezmurData".\n"copy(mezmurData)" to copy it to the clipboard.\n\n')
 
 class App extends React.Component {
