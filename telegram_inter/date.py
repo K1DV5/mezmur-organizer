@@ -62,5 +62,5 @@ def convert_date(to_be_conv: date):
             'day': geez_num(day),
             'week_day': week_days[to_be_conv.weekday()]
             }
-    return f'{eth_date["week_day"]} {eth_date["month"]} {eth_date["day"]} {eth_date["year"]} ዓ.ም.'
+    return f'{eth_date["week_day"]} {eth_date["day"]} {eth_date["month"]} {eth_date["year"]} ዓ.ም.'
 
