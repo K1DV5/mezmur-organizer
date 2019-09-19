@@ -123,6 +123,7 @@ def merge_updates(collected):
 
     result = search_messages(collected['last_id'])
     messages = result.messages
+    news = []  # new titles
     if messages: # there are new messages
         users = result.users
 
@@ -136,6 +137,8 @@ def merge_updates(collected):
                 mez_info = get_mez_info(message, sender)
                 # increment the total count
                 collected['count_eng'] += 1
+                # add to news
+                news.append(mez_info['title'] + ' በ ' + mez_info['sender_name'])
                 if mez_info['category'] in collected['data']:
                     collected['data'][mez_info['category']]['data'][mez_info['title']] = mez_info
                     # increment the category count
@@ -149,9 +152,7 @@ def merge_updates(collected):
                             }
         # count data
         collected['count'] = geez_num(collected['count_eng'])
-        return collected
-    print('There are no new messages')
-    return None
+    return collected, news
 
 def update_data():
 
@@ -162,15 +163,16 @@ def update_data():
     else:
         collected = {'data': {}, 'count_eng': 0, 'last_id': 0, 'count': 0}
 
+    updated = False
     if CONNECTED:
-        collected = merge_updates(collected)
+        collected, news = merge_updates(collected)
 
-    if collected:
+    if news:  # there are new
         with open(DATA_FILE, 'w', encoding='utf-8') as file:
             dump(collected, file, ensure_ascii=False)
 
         print(f'Updated data in "{DATA_FILE}"')
-        return True
+        return news
 
 
 # POST DATA
@@ -216,7 +218,7 @@ def post_output(news):
     with open(main_fname, 'w', encoding='utf-8') as file:
         # the main version
         built = template.replace('{{mezmurData}}', 
-                f'<script type="text/javascript">const mezmurData = {data}</script>')
+                f'<script type="text/javascript">mezmurData = {data}</script>')
         # build the basic version
         built = insert_basic(built, loads(data))
         # write file
@@ -224,8 +226,10 @@ def post_output(news):
         print('Built document')
 
     if CONNECTED:
-        client.send_file(CHAT, main_fname, caption="")
+        client.send_file(CHAT, main_fname, caption=f"የ {TODAY} ዕትም\nአዳዲስ የተጨመሩት፦\n\u2022" + '\n\u2022'.join(news))
         print('Uploaded data.')
 
-if update_data():  # there are some news
-    post_output()
+news = update_data()
+if news:  # there are some news
+    # pass
+    post_output(news)
