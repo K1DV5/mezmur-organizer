@@ -1,40 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>መዝሙር</title>
     <style>
-body {
-    margin: 0;
-}
+        body {
+            margin: 0;
+        }
     </style>
 
     <!-- for the basic version -->
     <noscript>
         <style>
-a {
-    color: #158;
-    text-decoration: none;
-}
+            a {
+                color: #158;
+                text-decoration: none;
+            }
 
-.toc-cat {
-    display: block;
-}
+            .toc-cat {
+                display: block;
+            }
 
-.toc-mez {
-    display: block;
-    margin-left: 2em;
-}
+            .toc-mez {
+                display: block;
+                margin-left: 2em;
+            }
         </style>
     </noscript>
+    <script type="text/javascript">
+        // for testing purposes
+        var mezmurData = {
+            "data": {
+                "አጫጭር": {
+                    "count": "፩",
+                    "count_eng": 1,
+                    "data": {
+                        "አንተኑ ፋኑኤል": {
+                            "title": "አንተኑ ፋኑኤል",
+                            "category": "አጫጭር",
+                            "sender_name": "K1DV5",
+                            "sender_link": "https://t.me/K1DV5",
+                            "body": "አንተኑ ፋኑኤል (መና)3 መና ዘአውርድከ መና\n(ወአንተኑ ለድንግል ዘአውርድከ መና\nወአንተኑ ለድንግል ዘአውርድከ መና) 2\n\nወአንተኑ ለድንግል ዘአውርድከ መና\nወአንተኑ ለድንግል ዘአውርድከ መና",
+                            "id": 1102,
+                            "date": "ማክሰኞ ፩ ፮ ፳፻፲፪ ዓ.ም."
+                        }
+                    }
+                }
+            },
+            "count_eng": 1,
+            "last_id": 1102,
+            "count": "፩",
+            "date": "ማክሰኞ ፩ ፮ ፳፻፲፪ ዓ.ም."
+        }
+    </script>
     {{mezmurData}}
 </head>
+
 <body>
     <div id="app"></div>
 
-<!-- the basic version -->
+    <!-- the basic version -->
     <noscript>
         <h1 class="title">መዝሙር</h1>
         <small class="subtitle">{{basicSubtitle}}</small>
@@ -43,4 +71,5 @@ a {
     </noscript>
 
 </body>
+
 </html>
