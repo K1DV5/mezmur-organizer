@@ -75,7 +75,7 @@ def search_messages(min_id):
         peer=CHAT,  # On which chat/conversation
         q=MEZ_BEGIN,  # What to search for
         filter=InputMessagesFilterEmpty(),  # Filter to use (maybe filter for media)
-        min_date=None,  # Minimum date
+        min_date=date(2019, 8, 1),  # Minimum date
         max_date=None,  # Maximum date
         offset_id=0,  # ID of the message to use as offset
         add_offset=0,  # Additional offset
@@ -204,11 +204,7 @@ def insert_basic(template, data):
 
     return built
 
-def post_output():
-    # clean staging dir
-    for file in glob('dist/መዝሙር-*.html'):
-        remove(file)
-
+def post_output(news):
     # bring the built index.html
     with open('dist/index.html', encoding='utf-8') as file:
         template = file.read()
@@ -216,9 +212,9 @@ def post_output():
     with open('mez-data.json', encoding='utf-8') as file:
         data = file.read()
     # build the final
-    main_fname = f'dist/መዝሙር-{TODAY.replace(" ", "-")}.html'
+    main_fname = f'dist/መዝሙር.html'
     with open(main_fname, 'w', encoding='utf-8') as file:
-        # the main varsion
+        # the main version
         built = template.replace('{{mezmurData}}', 
                 f'<script type="text/javascript">const mezmurData = {data}</script>')
         # build the basic version
