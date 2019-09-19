@@ -5,3 +5,6 @@ mezmur/staging
 pnpm-lock.yaml
 **/*.session
 local-data
+drive_client_secret.json
+drive_token.json
+mez-data.json
