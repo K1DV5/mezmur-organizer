@@ -7,7 +7,7 @@ from glob import glob
 from os import chdir, path, remove
 
 from telethon.sync import TelegramClient
-from telethon.tl.types import PeerChat, InputMessagesFilterEmpty
+from telethon.tl.types import PeerChannel, InputMessagesFilterEmpty
 from telethon.tl.functions.messages import SearchRequest
 
 MEZ_BEGIN = 'መዝ/'  # the beginning of the mez
@@ -37,8 +37,8 @@ try:
             client.sign_in(phone, input('Enter the code: '))
         except:
             client.sign_in(password=input('Password: '))
-    # chat = client.get_entity(PeerChat(269484381)) # The main group
-    CHAT = client.get_entity('MezCollectorBot')
+    CHAT = client.get_entity(PeerChannel(1199760564)) # The main group
+    # CHAT = client.get_entity('MezCollectorBot')
     CONNECTED = True
 
 except ConnectionError:
