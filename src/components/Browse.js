@@ -2,6 +2,7 @@ import React from 'react'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import PersonIcon from '@material-ui/icons/Person'
 import Viewer from './Viewer'
 
 export default (props) => {
@@ -9,26 +10,33 @@ export default (props) => {
     let data = props.data.data
     let categories = Object.keys(data)
     let gotoPage = props.gotoPage
-    
+
     if (props.visibleItems) { // for filtered list
         return (
-            props.visibleItems !== []? (
-            <List>
-                {props.visibleItems.map((mez, index) =>
-                    <ListItem key={index} button dense onClick={() => gotoPage(`${mez.category}/${mez.title.replace(' ', '-')}`)} >
-                        <ListItemText
-                            primary={mez.title}
-                            secondary={
-                                <React.Fragment>
-                                    {mez.category + '፣ ' + mez.date + '፣ በ '}
-                                    <a href={mez.sender_link} style={{fontSize: 'smaller', textDecoration: 'none'}}>
-                                        {mez.sender_name}
-                                    </a>
-                                </React.Fragment>
-                            } />
-                    </ListItem>
-                )}
-            </List>
+            props.visibleItems !== [] ? (
+                <List>
+                    {props.visibleItems.map((mez, index) =>
+                        <ListItem key={index} button dense onClick={() => gotoPage(`${mez.category}/${mez.title.replace(' ', '-')}`)} >
+                            <ListItemText
+                                primary={mez.title}
+                                secondary={
+                                    <React.Fragment>
+                                        {mez.category + '፣ ' + mez.date}
+                                        <span style={contactStyle}>
+                                            <PersonIcon />
+                                            <a
+                                                href={mez.sender_link}
+                                                style={contactLinkStyle}
+                                                target="_blank"
+                                            >
+                                                {mez.sender_name}
+                                            </a>
+                                        </span>
+                                    </React.Fragment>
+                                } />
+                        </ListItem>
+                    )}
+                </List>
             ) : <div>No results</div>
         )
     } else if (categories.includes(activePage)) { // list mez in category
@@ -43,14 +51,22 @@ export default (props) => {
                                 primary={title}
                                 secondary={
                                     <React.Fragment>
-                                        {mez.date + '፣ በ '}
-                                        <a href={mez.sender_link} style={{fontSize: 'smaller', textDecoration: 'none'}}>
-                                            {mez.sender_name}
-                                        </a>
+                                        {mez.date}
+                                        <span style={contactStyle}>
+                                            <PersonIcon />
+                                            <a
+                                                href={mez.sender_link}
+                                                style={contactLinkStyle}
+                                                target="_blank"
+                                            >
+                                                {mez.sender_name}
+                                            </a>
+                                        </span>
                                     </React.Fragment>
                                 } />
                         </ListItem>
-                    )})}
+                    )
+                })}
             </List>
         )
     } else if (activePage) { // for viewing mez
@@ -73,4 +89,20 @@ export default (props) => {
             ))}
         </List>
     )
+}
+
+let contactStyle = {
+    float: 'right',
+    style: 'inline-flex',
+    alignItems: 'center',
+    position: 'relative',
+    bottom: '.3em',
+}
+
+let contactLinkStyle = {
+    fontSize: 'smaller',
+    textDecoration: 'none',
+    position: 'relative',
+    marginLeft: 3,
+    bottom: '.5em'
 }
