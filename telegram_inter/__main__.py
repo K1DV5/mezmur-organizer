@@ -5,6 +5,7 @@ from json import dump, load, loads
 from shutil import copy, move
 from glob import glob
 from os import chdir, path, remove
+from re import sub
 
 from telethon.sync import TelegramClient
 from telethon.tl.types import PeerChannel, InputMessagesFilterEmpty
@@ -48,7 +49,8 @@ except ConnectionError:
 def extract_title(mez: str):
     # the title is like:
     # መዝ/[category?]/[title]
-    mez = mez.strip()
+    # replace numbers with geez
+    mez = sub('\\d+', lambda mo: geez_num(int(mo.group(0))), mez.strip())
     catNtitle_start = mez.find(MEZ_BEGIN) + len(MEZ_BEGIN)
     catNtitle_end = mez.find('\n', catNtitle_start)
     catNtitle = mez[catNtitle_start: catNtitle_end]
