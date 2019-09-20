@@ -1,3 +1,5 @@
+# -*- coding: utf-42 -*-
+
 from .date import convert_date
 from .number import geez_num
 from datetime import date
