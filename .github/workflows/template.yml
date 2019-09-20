@@ -11,41 +11,41 @@ jobs:
         steps:
             - name: checkout the repo
               uses: actions/checkout@v1
-            - name: list the comms
-              run:  ls comms
-            # - name: install dependencies
-            #   run:  npm i
-            # - name: build the template
-            #   run:  npm run build
-            # - name: upload the template for job upload
-            #   uses: actions/upload-artifact@v1
-            #   with:
-            #       name: template
-            #       path: dist/index.html
+            - name: install dependencies
+              run:  npm i
+            - name: build the template
+              run:  npm run build
+            - name: upload the template for job upload
+              uses: actions/upload-artifact@v1
+              with:
+                  name: template
+                  path: dist/index.html
 
-    # upload:
+    upload:
 
-        # name: Upload the template
-        # needs: build
-        # runs-on: ubuntu-latest
+        name: Upload the template
+        needs: build
+        runs-on: ubuntu-latest
 
-        # steps:
-            # - name: download from the build job
-            #   uses: actions/download-artifact@v1
-            #   with:
-            #       name: template
-            #       path: dist/index.html
-            # - name: install setuptools
-            #   run: sudo apt-get install -y python3-setuptools
-            # - name: install python dependencies
-            #   run:  pip3 install --upgrade telethon google-api-python-client google-auth-httplib2 google-auth-oauthlib
-            # - name: save secrets
-            #   env:
-            #       FILE_IDS: ${{secrets.DRIVE_FILE_IDS}}
-            #       TOKEN_DATA: ${{secrets.DRIVE_TOKEN_DATA}}
-            #   run: |
-            #     echo $FILE_IDS > drive_file_ids.json
-            #     echo $TOKEN_DATA > drive_token.json
-            # - name: upload template to drive
-            #   run:  python3 -m comms template
+        steps:
+            - name: checkout the repo
+              uses: actions/checkout@v1
+            - name: download from the build job
+              uses: actions/download-artifact@v1
+              with:
+                  name: template
+                  path: dist/index.html
+            - name: install setuptools
+              run: sudo apt-get install -y python3-setuptools
+            - name: install python dependencies
+              run:  pip3 install --upgrade telethon google-api-python-client google-auth-httplib2 google-auth-oauthlib
+            - name: save secrets
+              env:
+                  FILE_IDS: ${{secrets.DRIVE_FILE_IDS}}
+                  TOKEN_DATA: ${{secrets.DRIVE_TOKEN_DATA}}
+              run: |
+                echo $FILE_IDS > drive_file_ids.json
+                echo $TOKEN_DATA > drive_token.json
+            - name: upload template to drive
+              run:  python3 -m comms template
 
