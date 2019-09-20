@@ -215,7 +215,7 @@ def insert_basic(template, data):
 
     return built
 
-def post_output(client, chat, updates):
+def build_doc():
     # bring the built index.html
     with open('dist/index.html', encoding='utf-8') as file:
         template = file.read()
@@ -234,6 +234,7 @@ def post_output(client, chat, updates):
         file.write(built)
         print('Built document')
 
+def post_doc(client, chat, file, updates):
     caption = 'የ {TODAY} ዕትም'
     if updates['new']:
         new = [m['title'] + ' በ @' + m['sender'] for m in updates['new']]
@@ -241,6 +242,6 @@ def post_output(client, chat, updates):
     if updates['editted']:
         edits = [m['title'] + ' በ @' + m['sender'] for m in updates['editted']]
         caption += f"\nየተስተካከሉት፦\n \u2022 " + '\n \u2022 '.join(edits)
-    client.send_file(chat, main_fname, caption=caption)
+    client.send_file(chat, file, caption=caption)
     print('Uploaded doc.')
 
