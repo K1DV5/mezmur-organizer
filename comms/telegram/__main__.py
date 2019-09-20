@@ -42,9 +42,9 @@ def get_client():
         print('Connection problem.')
 
 def get_chat(client):
-    entity = 1199760564
+    entity = PeerChannel(1199760564)
+    # entity = PeerChannel('MezCollectorBot')
     chat = client.get_entity(entity) # The main group
-    # chat = client.get_entity('MezCollectorBot')
     return chat
 
 def extract_title(mez: str):
@@ -66,13 +66,12 @@ def extract_title(mez: str):
             'category': category,
             }
 
-def search_messages(client, min_id):
+def search_messages(client, chat, min_id):
     # option 1: get all messages and filter them here
     # messages = client.iter_messages(fk_entity)
     # messages = client.get_messages('MezCollectorBot')
 
     # option 2: get filtered messages from there
-    chat = get_chat(client)
     result = client(SearchRequest(
         peer=chat,  # On which chat/conversation
         q=MEZ_BEGIN,  # What to search for
@@ -120,10 +119,10 @@ def get_mez_info(message, sender):
             'date': convert_date(message.date.date()),
             }
 
-def merge_updates(client, collected):
+def merge_updates(client, chat, collected):
     '''merge collected data and existing'''
 
-    result = search_messages(client, collected['last_id'])
+    result = search_messages(client, chat, collected['last_id'])
     messages = result.messages
     news = []  # new titles
     if messages: # there are new messages
@@ -156,7 +155,7 @@ def merge_updates(client, collected):
         collected['count'] = geez_num(collected['count_eng'])
     return collected, news
 
-def update_data(client):
+def update_data(client, chat):
 
     if path.exists(DATA_FILE):
         # get the data in the file
@@ -165,7 +164,7 @@ def update_data(client):
     else:
         collected = {'data': {}, 'count_eng': 0, 'last_id': 0, 'count': 0}
 
-    collected, news = merge_updates(client, collected)
+    collected, news = merge_updates(client, chat, collected)
 
     if news:  # there are new
         with open(DATA_FILE, 'w', encoding='utf-8') as file:
@@ -206,7 +205,7 @@ def insert_basic(template, data):
 
     return built
 
-def post_output(news):
+def post_output(client, chat, news):
     # bring the built index.html
     with open('dist/index.html', encoding='utf-8') as file:
         template = file.read()
@@ -228,6 +227,6 @@ def post_output(news):
     caption = ''
     if news:
         caption = f"የ {TODAY} ዕትም\nአዳዲስ የተጨመሩት፦\n\u2022" + '\n\u2022'.join(news)
-    client.send_file(CHAT, main_fname, caption=caption)
+    client.send_file(chat, main_fname, caption=caption)
     print('Uploaded doc.')
 

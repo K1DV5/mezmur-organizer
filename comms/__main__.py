@@ -1,4 +1,4 @@
-from .telegram.__main__ import get_client, update_data, post_output
+from .telegram.__main__ import get_client, get_chat, update_data, post_output
 from .drive import authorized_service, update_file, download_file
 from os import chdir, path, makedirs
 from sys import argv
@@ -22,7 +22,8 @@ if __name__ == '__main__':
             download_file(service, 'mez-data.json', file_ids['mez-data.json'])
             # update data from telegram to drive
             client = get_client()
-            news = update_data(client)
+            chat = get_chat(client)
+            news = update_data(client, chat)
             if news:
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
             else:
@@ -35,11 +36,12 @@ if __name__ == '__main__':
             download_file(service, 'dist/index.html', file_ids['index.html'])
             # update data from telegram to drive
             client = get_client()
-            news = update_data(client)
+            chat = get_chat(client)
+            news = update_data(client, chat)
             if news:
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
                 # post on telegram
-                post_output([])
+                post_output(client, chat, [])
             else:
                 print('No new mez')
         elif command == 'template':
@@ -49,7 +51,8 @@ if __name__ == '__main__':
         # FOR LOCAL TESTING
         elif command == 'lbot':
             client = get_client()
-            news = update_data(client)
+            chat = get_chat(client)
+            news = update_data(client, chat)
             # news = 1
             if news:
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
@@ -58,11 +61,12 @@ if __name__ == '__main__':
         elif command == 'lbuild':
             # update data from telegram to drive
             client = get_client()
-            news = update_data(client)
+            chat = get_chat(client)
+            news = update_data(client, chat)
             if news:
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
                 # post on telegram
-                post_output([])
+                post_output(client, chat, [])
             else:
                 print('No new mez')
         elif command == 'ltemplate':
