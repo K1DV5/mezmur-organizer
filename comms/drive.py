@@ -1,6 +1,6 @@
 # -args(up doc)
 import json
-from os import path, makedirs
+from os import path
 from sys import argv
 from googleapiclient.discovery import build, MediaFileUpload
 from googleapiclient.http import MediaIoBaseDownload
@@ -10,12 +10,6 @@ from google.oauth2.credentials import Credentials
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/drive']
-
-FILE_IDS = {
-        'K1DV5.session': '1_lEqQOPrSLNd78KuK7e89sfPA6rWEAfo',
-        'mez-data.json': '13mTNhBRW2nZ-eFYdhxqKFA3rPJf3mwDg',
-        'index.html': '1seFscEboAxc0Q3pHLw45uTxP3Zcrl58o',
-        }
 
 def authorized_service():
     """Shows basic usage of the Drive v3 API.
@@ -51,38 +45,18 @@ def authorized_service():
 
     return build('drive', 'v3', credentials=creds)
 
-def download_file(service, file):
-    file_id = FILE_IDS[path.basename(file)]
+def download_file(service, file_name, file_id):
     request = service.files().get_media(fileId=file_id)
-    with open(file, 'wb') as file:
+    with open(file_name, 'wb') as file:
         downloader = MediaIoBaseDownload(file, request)
         done = False
         while done is False:
             status, done = downloader.next_chunk()
             print("Download %d%%." % int(status.progress() * 100))
 
-def update_file(service, file):
-    media = MediaFileUpload(file)
-    file = service.files().update(media_body=media,  # create for uploading, - fileId + metadata
-                                  fileId=FILE_IDS[path.basename(file)]).execute()
+def update_file(service, file_name, file_id):
+    media = MediaFileUpload(file_name)
+    # create for uploading, - fileId + metadata
+    service.files().update(media_body=media, fileId=file_id).execute()
+    print('Updated file "' + file_name + '"')
 
-
-if __name__ == '__main__':
-    service = authorized_service()
-    if len(argv) == 3:
-        direction, command = argv[1:]
-        # first download and then upload
-        if direction == 'down':
-            if command == 'bot':
-                download_file(service, 'K1DV5.session')
-                download_file(service, 'mez-data.json')
-            elif command == 'doc':
-                download_file(service, 'K1DV5.session')
-                download_file(service, 'mez-data.json')
-                makedirs('dist', exist_ok=True)
-                download_file(service, 'dist/index.html')
-        elif direction == 'up':
-            if command in ['bot', 'doc']:
-                update_file(service, 'mez-data.json')
-            elif command == 'template':
-                update_file(service, 'dist/index.html')

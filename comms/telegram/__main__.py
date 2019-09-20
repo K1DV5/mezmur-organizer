@@ -4,7 +4,7 @@ from datetime import date
 from json import dump, load, loads
 from shutil import copy, move
 from glob import glob
-from os import chdir, path, remove
+from os import path, remove
 from re import sub
 
 from telethon.sync import TelegramClient
@@ -17,12 +17,7 @@ DATA_FILE = 'mez-data.json'
 # today's date in amharic
 TODAY = convert_date(date.today())
 
-# to have access to the session file from anywhere
-script_dir = path.dirname(__package__)
-if script_dir:
-    # change the cwd so it works here wherever it is called
-    chdir(script_dir)
-
+# these values are from telegram desktop
 api_id = 17349
 api_hash = '344583e45741c457fe1862106095a5eb'
 phone = '+251920810739'
@@ -163,7 +158,7 @@ def update_data():
     else:
         collected = {'data': {}, 'count_eng': 0, 'last_id': 0, 'count': 0}
 
-    updated = False
+    news = None
     if CONNECTED:
         collected, news = merge_updates(collected)
 
@@ -226,10 +221,9 @@ def post_output(news):
         print('Built document')
 
     if CONNECTED:
-        client.send_file(CHAT, main_fname, caption=f"የ {TODAY} ዕትም\nአዳዲስ የተጨመሩት፦\n\u2022" + '\n\u2022'.join(news))
-        print('Uploaded data.')
+        caption = ''
+        if news:
+            caption = f"የ {TODAY} ዕትም\nአዳዲስ የተጨመሩት፦\n\u2022" + '\n\u2022'.join(news)
+        client.send_file(CHAT, main_fname, caption=caption)
+        print('Uploaded doc.')
 
-news = update_data()
-if news:  # there are some news
-    # pass
-    post_output(news)
