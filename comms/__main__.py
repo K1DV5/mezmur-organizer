@@ -5,10 +5,10 @@ from sys import argv
 import json
 
 # to have access to the session file from anywhere
-script_dir = path.dirname(__package__)
-if script_dir:
+package_dir = path.dirname(__package__)
+if package_dir:
     # change the cwd so it works here wherever it is called
-    chdir(script_dir)
+    chdir(package_dir)
 
 if __name__ == '__main__':
     if len(argv) == 2:
