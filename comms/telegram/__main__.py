@@ -124,7 +124,7 @@ def merge_updates(client, chat, collected):
 
     result = search_messages(client, chat, collected['last_id'])
     messages = result.messages
-    news = []  # new titles
+    updates = {'new': [], 'editted': []}  # new titles
     if messages: # there are new messages
         users = result.users
 
@@ -136,16 +136,26 @@ def merge_updates(client, chat, collected):
             if message_cont and message_cont.strip().startswith(MEZ_BEGIN):
                 sender = [user for user in users if message.from_id == user.id][0]
                 mez_info = get_mez_info(message, sender)
-                # increment the total count
-                collected['count_eng'] += 1
-                # add to news
-                news.append(mez_info['title'] + ' በ ' + mez_info['sender_name'])
-                if mez_info['category'] in collected['data']:
-                    collected['data'][mez_info['category']]['data'][mez_info['title']] = mez_info
-                    # increment the category count
-                    collected['data'][mez_info['category']]['count_eng'] += 1
-                    collected['data'][mez_info['category']]['count'] = geez_num(collected['data'][mez_info['category']]['count_eng'])
+                title, category = mez_info['title'], mez_info['category']
+                sender = mez_info['sender_username']
+                if category in collected['data']:
+                    cat_info = collected['data'][category]
+                    if title not in cat_info['data']:
+                        # add to updates, added: +
+                        updates['new'].append({'title': title, 'sender': sender})
+                        # increment the total count
+                        collected['count_eng'] += 1
+                        # increment the category count
+                        cat_info['count_eng'] += 1
+                        # convert the count number
+                        cat_info['count'] = geez_num(cat_info['count_eng'])
+                    else:
+                        # add to updates, editted: *
+                        updates['editted'].append({'title': title, 'sender': sender})
+                    cat_info['data'][title] = mez_info
                 else:
+                    # increment the total count
+                    collected['count_eng'] += 1
                     collected['data'][mez_info['category']] = {
                             'count': geez_num(1),
                             'count_eng': 1,
@@ -153,7 +163,7 @@ def merge_updates(client, chat, collected):
                             }
         # count data
         collected['count'] = geez_num(collected['count_eng'])
-    return collected, news
+    return collected, updates
 
 def update_data(client, chat):
 
@@ -164,14 +174,14 @@ def update_data(client, chat):
     else:
         collected = {'data': {}, 'count_eng': 0, 'last_id': 0, 'count': 0}
 
-    collected, news = merge_updates(client, chat, collected)
+    collected, updates = merge_updates(client, chat, collected)
 
-    if news:  # there are new
+    if updates['new'] or updates['editted']:  # there are news
         with open(DATA_FILE, 'w', encoding='utf-8') as file:
             dump(collected, file, ensure_ascii=False)
 
         print(f'Updated data in "{DATA_FILE}"')
-        return news
+        return updates
 
 
 # POST DATA
@@ -205,7 +215,7 @@ def insert_basic(template, data):
 
     return built
 
-def post_output(client, chat, news):
+def post_output(client, chat, updates):
     # bring the built index.html
     with open('dist/index.html', encoding='utf-8') as file:
         template = file.read()
@@ -224,9 +234,13 @@ def post_output(client, chat, news):
         file.write(built)
         print('Built document')
 
-    caption = ''
-    if news:
-        caption = f"የ {TODAY} ዕትም\nአዳዲስ የተጨመሩት፦\n\u2022" + '\n\u2022'.join(news)
+    caption = 'የ {TODAY} ዕትም'
+    if updates['new']:
+        new = [m['title'] + ' በ @' + m['sender'] for m in updates['new']]
+        caption += f"\nአዳዲስ የተጨመሩት፦\n \u2022 " + '\n \u2022 '.join(new)
+    if updates['editted']:
+        edits = [m['title'] + ' በ @' + m['sender'] for m in updates['editted']]
+        caption += f"\nየተስተካከሉት፦\n \u2022 " + '\n \u2022 '.join(edits)
     client.send_file(chat, main_fname, caption=caption)
     print('Uploaded doc.')
 
