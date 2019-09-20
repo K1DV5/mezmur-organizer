@@ -33,8 +33,10 @@ jobs:
               with:
                   name: template
                   path: dist/index.html
+            - name: install setuptools
+              run: sudo apt-get install -y python3-setuptools
             - name: install python dependencies
-              run:  pip3 install --upgrade setuptools telethon google-api-python-client google-auth-httplib2 google-auth-oauthlib
+              run:  pip3 install --upgrade telethon google-api-python-client google-auth-httplib2 google-auth-oauthlib
             - name: upload the template to drive
               env:
                   FILE_IDS: ${{secrets.DRIVE_FILE_IDS}}
