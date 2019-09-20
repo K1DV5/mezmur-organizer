@@ -23,23 +23,27 @@ api_hash = '344583e45741c457fe1862106095a5eb'
 phone = '+251920810739'
 username = 'K1DV5'
 
-client = TelegramClient(username, api_id, api_hash)
-try:
-    client.connect()
-    # Ensure you're authorized
-    if not client.is_user_authorized():
-        client.send_code_request(phone)
-        try:
-            client.sign_in(phone, input('Enter the code: '))
-        except:
-            client.sign_in(password=input('Password: '))
-    CHAT = client.get_entity(PeerChannel(1199760564)) # The main group
-    # CHAT = client.get_entity('MezCollectorBot')
-    CONNECTED = True
+def get_client():
+    client = TelegramClient(username, api_id, api_hash)
+    try:
+        client.connect()
+        # Ensure you're authorized
+        if not client.is_user_authorized():
+            client.send_code_request(phone)
+            try:
+                client.sign_in(phone, input('Enter the code: '))
+            except:
+                client.sign_in(password=input('Password: '))
+        return client
 
-except ConnectionError:
-    print('Connection problem.')
-    CONNECTED = False
+    except ConnectionError:
+        print('Connection problem.')
+
+def get_chat(client):
+    entity = 1199760564
+    chat = client.get_entity(entity) # The main group
+    # chat = client.get_entity('MezCollectorBot')
+    return chat
 
 def extract_title(mez: str):
     # the title is like:
@@ -60,14 +64,15 @@ def extract_title(mez: str):
             'category': category,
             }
 
-def search_messages(min_id):
+def search_messages(client, min_id):
     # option 1: get all messages and filter them here
     # messages = client.iter_messages(fk_entity)
     # messages = client.get_messages('MezCollectorBot')
 
     # option 2: get filtered messages from there
+    chat = get_chat(client)
     result = client(SearchRequest(
-        peer=CHAT,  # On which chat/conversation
+        peer=chat,  # On which chat/conversation
         q=MEZ_BEGIN,  # What to search for
         filter=InputMessagesFilterEmpty(),  # Filter to use (maybe filter for media)
         min_date=date(2019, 8, 1),  # Minimum date
@@ -113,10 +118,10 @@ def get_mez_info(message, sender):
             'date': convert_date(message.date.date()),
             }
 
-def merge_updates(collected):
+def merge_updates(client, collected):
     '''merge collected data and existing'''
 
-    result = search_messages(collected['last_id'])
+    result = search_messages(client, collected['last_id'])
     messages = result.messages
     news = []  # new titles
     if messages: # there are new messages
@@ -149,7 +154,7 @@ def merge_updates(collected):
         collected['count'] = geez_num(collected['count_eng'])
     return collected, news
 
-def update_data():
+def update_data(client):
 
     if path.exists(DATA_FILE):
         # get the data in the file
@@ -158,9 +163,7 @@ def update_data():
     else:
         collected = {'data': {}, 'count_eng': 0, 'last_id': 0, 'count': 0}
 
-    news = None
-    if CONNECTED:
-        collected, news = merge_updates(collected)
+    collected, news = merge_updates(client, collected)
 
     if news:  # there are new
         with open(DATA_FILE, 'w', encoding='utf-8') as file:
@@ -220,10 +223,9 @@ def post_output(news):
         file.write(built)
         print('Built document')
 
-    if CONNECTED:
-        caption = ''
-        if news:
-            caption = f"የ {TODAY} ዕትም\nአዳዲስ የተጨመሩት፦\n\u2022" + '\n\u2022'.join(news)
-        client.send_file(CHAT, main_fname, caption=caption)
-        print('Uploaded doc.')
+    caption = ''
+    if news:
+        caption = f"የ {TODAY} ዕትም\nአዳዲስ የተጨመሩት፦\n\u2022" + '\n\u2022'.join(news)
+    client.send_file(CHAT, main_fname, caption=caption)
+    print('Uploaded doc.')
 

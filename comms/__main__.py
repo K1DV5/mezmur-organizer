@@ -1,4 +1,4 @@
-from .telegram.__main__ import update_data, post_output
+from .telegram.__main__ import get_client, update_data, post_output
 from .drive import authorized_service, update_file, download_file
 from os import chdir, path, makedirs
 from sys import argv
@@ -21,7 +21,8 @@ if __name__ == '__main__':
             download_file(service, 'K1DV5.session', file_ids['K1DV5.session'])
             download_file(service, 'mez-data.json', file_ids['mez-data.json'])
             # update data from telegram to drive
-            news = update_data()
+            client = get_client()
+            news = update_data(client)
             if news:
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
             else:
@@ -33,7 +34,8 @@ if __name__ == '__main__':
             makedirs('dist', exist_ok=True)
             download_file(service, 'dist/index.html', file_ids['index.html'])
             # update data from telegram to drive
-            news = update_data()
+            client = get_client()
+            news = update_data(client)
             if news:
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
                 # post on telegram
@@ -46,7 +48,8 @@ if __name__ == '__main__':
 
         # FOR LOCAL TESTING
         elif command == 'lbot':
-            news = update_data()
+            client = get_client()
+            news = update_data(client)
             # news = 1
             if news:
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
@@ -54,7 +57,8 @@ if __name__ == '__main__':
                 print('No new mez')
         elif command == 'lbuild':
             # update data from telegram to drive
-            news = update_data()
+            client = get_client()
+            news = update_data(client)
             if news:
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
                 # post on telegram
