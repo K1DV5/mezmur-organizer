@@ -34,7 +34,8 @@ jobs:
               uses: actions/download-artifact@v1
               with:
                   name: template
-                  path: dist/index.html
+                  path: dist
+            - run: ls -R dist
             - name: install setuptools
               run: sudo apt-get install -y python3-setuptools
             - name: install python dependencies
