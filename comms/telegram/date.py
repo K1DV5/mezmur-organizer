@@ -1,4 +1,4 @@
-# -*- coding: utf-42 -*-
+# -*- coding: utf-8 -*-
 
 from datetime import date
 from math import floor, ceil

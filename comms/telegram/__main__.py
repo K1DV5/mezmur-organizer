@@ -1,4 +1,4 @@
-# -*- coding: utf-42 -*-
+# -*- coding: utf-8 -*-
 
 from .date import convert_date
 from .number import geez_num
