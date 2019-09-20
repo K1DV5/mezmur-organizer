@@ -39,7 +39,7 @@ if __name__ == '__main__':
             client = get_client()
             chat = get_chat(client)
             updates = update_data(client, chat)
-            if updates['new'] or updates['editted']:
+            if updates:  # None if there is no update
                 # to drive
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
                 # post on telegram
@@ -67,7 +67,7 @@ if __name__ == '__main__':
             client = get_client()
             chat = get_chat(client)
             updates = update_data(client, chat)
-            if updates['new'] or updates['editted']:
+            if updates:  # None if there is no update
                 # to drive
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
                 # post on telegram
