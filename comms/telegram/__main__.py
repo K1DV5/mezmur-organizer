@@ -237,7 +237,7 @@ def build_doc():
     return main_fname
 
 def post_doc(client, chat, file, updates):
-    caption = 'የ {TODAY} ዕትም'
+    caption = f'የ {TODAY} ዕትም'
     if updates['new']:
         new = [m['title'] + ' በ @' + m['sender'] for m in updates['new']]
         caption += f"\nአዳዲስ የተጨመሩት፦\n \u2022 " + '\n \u2022 '.join(new)
