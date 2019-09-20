@@ -1,0 +1,27 @@
+name: Template
+
+on: [push]
+
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: checkout the repo
+              uses: actions/checkout@v1
+            - name: install dependencies
+              run:  npm i
+            - name: build the template
+              run:  npm run build
+
+    # upload:
+
+    #     runs-on: ubuntu-latest
+
+    #     steps:
+    #         - name: install python dependencies
+    #           run:  pip3 install --upgrade telethon google-api-python-client google-auth-httplib2 google-auth-oauthlib
+    #         - name: upload the template to drive
+    #           run:  
+
