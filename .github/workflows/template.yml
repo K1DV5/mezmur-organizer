@@ -1,6 +1,10 @@
 name: Template
 
-on: [push]
+on:
+    push:
+        paths:
+            - 'src/*'
+            - 'src/*/*'
 
 jobs:
     build:
@@ -35,7 +39,6 @@ jobs:
               with:
                   name: template
                   path: dist
-            - run: ls -R dist
             - name: install setuptools
               run: sudo apt-get install -y python3-setuptools
             - name: install python dependencies
