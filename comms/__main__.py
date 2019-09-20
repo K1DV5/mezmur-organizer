@@ -78,7 +78,10 @@ if __name__ == '__main__':
         elif command == 'ltemplate':
             # build template (npm run build) before this and update on drive
             update_file(service, 'dist/index.html', file_ids['index.html'])
-
+        elif command == 'lgetdata':
+            download_file(service, 'mez-data.json', file_ids['mez-data.json'])
+        elif command == 'lupdatedata':
+            update_file(service, 'mez-data.json', file_ids['mez-data.json'])
         else:
             raise ValueError('Command should be in [bot, build, template]')
     else:
