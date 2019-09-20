@@ -25,4 +25,4 @@ jobs:
                 echo $FILE_IDS > drive_file_ids.json
                 echo $TOKEN_DATA > drive_token.json
             - name: get needed files from drive, update data and post
-              run:  python -m comms build
+              run:  python3 -m comms build
