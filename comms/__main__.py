@@ -1,4 +1,4 @@
-from .telegram.__main__ import get_client, get_chat, update_data, post_output
+from .telegram.__main__ import get_client, get_chat, update_data, build_doc, post_doc
 from .drive import authorized_service, update_file, download_file
 from os import chdir, path, makedirs
 from sys import argv
@@ -17,18 +17,19 @@ if __name__ == '__main__':
             file_ids = json.load(file)
         command = argv[1]
         if command == 'bot':
-            # download session file and data
-            download_file(service, 'K1DV5.session', file_ids['K1DV5.session'])
-            download_file(service, 'mez-data.json', file_ids['mez-data.json'])
-            # update data from telegram to drive
-            client = get_client()
-            chat = get_chat(client)
-            news = update_data(client, chat)
-            if news:
-                update_file(service, 'mez-data.json', file_ids['mez-data.json'])
-            else:
-                print('No new mez')
-        elif command == 'build':
+            raise NotImplementedError('Bot not yet ready')
+            # # download session file and data
+            # download_file(service, 'K1DV5.session', file_ids['K1DV5.session'])
+            # download_file(service, 'mez-data.json', file_ids['mez-data.json'])
+            # # update data from telegram to drive
+            # client = get_client()
+            # chat = get_chat(client)
+            # updates = update_data(client, chat)
+            # if updates:
+            #     update_file(service, 'mez-data.json', file_ids['mez-data.json'])
+            # else:
+            #     print('No new mez')
+        elif command == 'build':  # once a week or so
             # download session file, data, template
             download_file(service, 'K1DV5.session', file_ids['K1DV5.session'])
             download_file(service, 'mez-data.json', file_ids['mez-data.json'])
@@ -37,11 +38,13 @@ if __name__ == '__main__':
             # update data from telegram to drive
             client = get_client()
             chat = get_chat(client)
-            news = update_data(client, chat)
-            if news:
+            updates = update_data(client, chat)
+            if updates['new'] or updates['editted']:
+                # to drive
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
                 # post on telegram
-                post_output(client, chat, [])
+                file = build_doc()
+                post_doc(client, chat, file, updates)
             else:
                 print('No new mez')
         elif command == 'template':
@@ -50,23 +53,26 @@ if __name__ == '__main__':
 
         # FOR LOCAL TESTING
         elif command == 'lbot':
-            client = get_client()
-            chat = get_chat(client)
-            news = update_data(client, chat)
-            # news = 1
-            if news:
-                update_file(service, 'mez-data.json', file_ids['mez-data.json'])
-            else:
-                print('No new mez')
+            raise NotImplementedError('Bot not yet ready')
+            # client = get_client()
+            # chat = get_chat(client)
+            # updates = update_data(client, chat)
+            # # updates = 1
+            # if updates:
+            #     update_file(service, 'mez-data.json', file_ids['mez-data.json'])
+            # else:
+            #     print('No new mez')
         elif command == 'lbuild':
             # update data from telegram to drive
             client = get_client()
             chat = get_chat(client)
-            news = update_data(client, chat)
-            if news:
+            updates = update_data(client, chat)
+            if updates['new'] or updates['editted']:
+                # to drive
                 update_file(service, 'mez-data.json', file_ids['mez-data.json'])
                 # post on telegram
-                post_output(client, chat, [])
+                file = build_doc()
+                # post_doc(client, chat, file, updates)
             else:
                 print('No new mez')
         elif command == 'ltemplate':

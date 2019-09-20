@@ -103,7 +103,7 @@ def get_sender_info(sender):
     else:
         sender_name = sender_username
 
-    return {'name': sender_name, 'link': sender_link}
+    return {'name': sender_name, 'link': sender_link, 'username': sender_username}
 
 def get_mez_info(message, sender):
     message_cont = message.message
@@ -114,6 +114,7 @@ def get_mez_info(message, sender):
             'category': mez_data['category'],
             'sender_name': sender_info['name'],
             'sender_link': sender_info['link'],
+            'sender_username': sender_info['username'],
             'body': mez_data['body'],
             'id': message.id,
             'date': convert_date(message.date.date()),
@@ -226,13 +227,14 @@ def build_doc():
     main_fname = f'dist/መዝሙር.html'
     with open(main_fname, 'w', encoding='utf-8') as file:
         # the main version
-        built = template.replace('{{mezmurData}}', 
+        built = template.replace('{{mezmurData}}',
                 f'<script type="text/javascript">mezmurData = {data}</script>')
         # build the basic version
         built = insert_basic(built, loads(data))
         # write file
         file.write(built)
         print('Built document')
+    return main_fname
 
 def post_doc(client, chat, file, updates):
     caption = 'የ {TODAY} ዕትም'
