@@ -16,20 +16,7 @@ if __name__ == '__main__':
         with open('drive_file_ids.json') as file:
             file_ids = json.load(file)
         command = argv[1]
-        if command == 'bot':
-            raise NotImplementedError('Bot not yet ready')
-            # # download session file and data
-            # download_file(service, 'K1DV5.session', file_ids['K1DV5.session'])
-            # download_file(service, 'mez-data.json', file_ids['mez-data.json'])
-            # # update data from telegram to drive
-            # client = get_client()
-            # chat = get_chat(client)
-            # updates = update_data(client, chat)
-            # if updates:
-            #     update_file(service, 'mez-data.json', file_ids['mez-data.json'])
-            # else:
-            #     print('No new mez')
-        elif command == 'build':  # once a week or so
+        if command == 'build':  # once a week or so
             # download session file, data, template
             download_file(service, 'K1DV5.session', file_ids['K1DV5.session'])
             download_file(service, 'mez-data.json', file_ids['mez-data.json'])
@@ -52,16 +39,6 @@ if __name__ == '__main__':
             update_file(service, 'dist/index.html', file_ids['index.html'])
 
         # FOR LOCAL TESTING
-        elif command == 'lbot':
-            raise NotImplementedError('Bot not yet ready')
-            # client = get_client()
-            # chat = get_chat(client)
-            # updates = update_data(client, chat)
-            # # updates = 1
-            # if updates:
-            #     update_file(service, 'mez-data.json', file_ids['mez-data.json'])
-            # else:
-            #     print('No new mez')
         elif command == 'lbuild':
             # update data from telegram to drive
             client = get_client()
