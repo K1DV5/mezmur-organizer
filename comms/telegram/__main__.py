@@ -120,12 +120,57 @@ def get_mez_info(message, sender):
             'date': convert_date(message.date.date()),
             }
 
+def add_mez(text, collected, sender, updates):
+    mez_info = get_mez_info(text, sender)
+    title, category = mez_info['title'], mez_info['category']
+    sender = mez_info['sender_username']
+    if category in collected['data']:
+        cat_info = collected['data'][category]
+        if title not in cat_info['data']:
+            # add to updates, added: +
+            updates['new'].append({'title': title, 'sender': sender})
+            # increment the total count
+            collected['count_eng'] += 1
+            # increment the category count
+            cat_info['count_eng'] += 1
+            # convert the count number
+            cat_info['count'] = geez_num(cat_info['count_eng'])
+        else:
+            # add to updates, editted: *
+            updates['editted'].append({'title': title, 'sender': sender})
+        cat_info['data'][title] = mez_info
+    else:
+        # increment the total count
+        collected['count_eng'] += 1
+        collected['data'][mez_info['category']] = {
+                'count': geez_num(1),
+                'count_eng': 1,
+                'data': {mez_info['title']: mez_info}
+                }
+    return collected, updates
+
+def remove_mez(text, collected, updates):
+    # remove existing
+    first_line = text[len(MEZ_BEGIN)+1:text.find('\n')]
+    category, title = first_line.split('/') if '/' in first_line else ('', first_line)
+    if category in collected['data']:
+        if title in collected['data'][category]['data']:
+            cat_info = collected['data'][category]
+            sender = cat_info['data'][title]['sender_username']
+            updates['removed'].append({'title': title, 'sender': sender})
+            # update counts
+            collected['count_eng'] -= 1
+            cat_info['count_eng'] -= 1
+            cat_info['count'] = geez_num(cat_info['count_eng'])
+            del cat_info['data'][title]
+    return collected, updates
+
 def merge_updates(client, chat, collected):
     '''merge collected data and existing'''
 
     result = search_messages(client, chat, collected['last_id'])
     messages = result.messages
-    updates = {'new': [], 'editted': []}  # new titles
+    updates = {'new': [], 'editted': [], 'removed': []}
     if messages: # there are new messages
         users = result.users
 
@@ -134,34 +179,13 @@ def merge_updates(client, chat, collected):
 
         for message in messages:
             message_cont = message.message
-            if message_cont and message_cont.strip().startswith(MEZ_BEGIN):
-                sender = [user for user in users if message.from_id == user.id][0]
-                mez_info = get_mez_info(message, sender)
-                title, category = mez_info['title'], mez_info['category']
-                sender = mez_info['sender_username']
-                if category in collected['data']:
-                    cat_info = collected['data'][category]
-                    if title not in cat_info['data']:
-                        # add to updates, added: +
-                        updates['new'].append({'title': title, 'sender': sender})
-                        # increment the total count
-                        collected['count_eng'] += 1
-                        # increment the category count
-                        cat_info['count_eng'] += 1
-                        # convert the count number
-                        cat_info['count'] = geez_num(cat_info['count_eng'])
-                    else:
-                        # add to updates, editted: *
-                        updates['editted'].append({'title': title, 'sender': sender})
-                    cat_info['data'][title] = mez_info
-                else:
-                    # increment the total count
-                    collected['count_eng'] += 1
-                    collected['data'][mez_info['category']] = {
-                            'count': geez_num(1),
-                            'count_eng': 1,
-                            'data': {mez_info['title']: mez_info}
-                            }
+            if message_cont:
+                message_cont = message_cont.strip()
+                if message_cont.startswith(MEZ_BEGIN):
+                    sender = [user for user in users if message.from_id == user.id][0]
+                    collected, updates = add_mez(message_cont, collected, sender, updates)
+                elif message_cont.startswith('-' + MEZ_BEGIN):
+                    collected, updates = remove_mez(message_cont, collected, updates)
         # count data
         collected['count'] = geez_num(collected['count_eng'])
     return collected, updates
@@ -244,6 +268,9 @@ def post_doc(client, chat, file, updates):
     if updates['editted']:
         edits = [m['title'] + ' በ @' + m['sender'] for m in updates['editted']]
         caption += f"\nየተስተካከሉት፦\n \u2022 " + '\n \u2022 '.join(edits)
+    if updates['removed']:
+        rems = [m['title'] + ' በ @' + m['sender'] for m in updates['editted']]
+        caption += f"\nየጠፉት፦\n \u2022 " + '\n \u2022 '.join(rems)
     client.send_file(chat, file, caption=caption)
     print('Uploaded doc.')
 
