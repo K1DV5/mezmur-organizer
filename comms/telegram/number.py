@@ -36,8 +36,8 @@ def geez_num(n):
             current2 = n[i*2:i*2+2]
             ret = ret + nums10[int(current2[0])] + nums1[int(current2[1])] + num00
 
-        #  clip the 00 and the first if it is 1
-        startPos = 1 if ret[1] == nums1[1] and len(ret) > 2 else 0
+        #  clip the 00 at the end and the first if it is 1
+        startPos = 1 if ret[0] == nums1[1] and len(ret) > 2 else 0
         return ret[startPos:-1]
     return ''
 
