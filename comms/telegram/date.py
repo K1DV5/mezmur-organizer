@@ -14,7 +14,7 @@ _4_year_period = 4 * 365 + 1
 # _4_year_diff = (Feb29 - Pagume6).days
 _4_year_diff = 171
 
-week_days = ['ሰኞ', 'ማክሰኞ', 'ረቡዕ', 'ሐሙስ', 'ዓርብ', 'ቅዳሜ', 'እሁድ']
+months = ['መስከረም', 'ጥቅምት', 'ህዳር', 'ታህሳስ', 'ጥር', 'የካቲት', 'መጋቢት', 'ሚያዝያ', 'ግንቦት', 'ሰኔ', 'ሐምሌ', 'ነሐሴ', 'ጳጉሜ']
 
 def convert_date(to_be_conv: date):
     # differences from the anchor dates
@@ -60,9 +60,8 @@ def convert_date(to_be_conv: date):
 
     eth_date = { ''
             'year': geez_num(year),
-            'month': geez_num(month),
+            'month': months[month - 1],  # 0 based list
             'day': geez_num(day),
-            'week_day': week_days[to_be_conv.weekday()]
             }
-    return f'{eth_date["week_day"]} {eth_date["day"]} {eth_date["month"]} {eth_date["year"]} ዓ.ም.'
+    return f'{eth_date["month"]} {eth_date["day"]} {eth_date["year"]} ዓ.ም.'
 
