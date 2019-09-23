@@ -89,63 +89,46 @@ def search_messages(client, chat, min_id):
 
     return result
 
-def get_sender_info(sender):
-    sender_username = sender.username
-    sender_link = f'https://t.me/{sender_username}'
-    sender_fname = sender.first_name
-    sender_lname = sender.last_name
-    if sender_fname and sender_lname:
-        sender_name = f'{sender_fname} {sender_lname}'
-    elif sender_fname:
-        sender_name = sender_fname
-    elif sender_lname:
-        sender_name = sender_lname
-    else:
-        sender_name = sender_username
-
-    return {'name': sender_name, 'link': sender_link, 'username': sender_username}
-
 def get_mez_info(message, sender):
     message_cont = message.message
     mez_data = extract_title(message_cont)
-    sender_info = get_sender_info(sender)
     return {
             'title': mez_data['title'],
             'category': mez_data['category'],
-            'sender_name': sender_info['name'],
-            'sender_link': sender_info['link'],
-            'sender_username': sender_info['username'],
-            'body': mez_data['body'],
-            'id': message.id,
-            'date': convert_date(message.date.date()),
+            'props': {
+                'sender': sender.username,
+                'body': mez_data['body'],
+                'id': message.id,
+                'date': convert_date(message.date.date()),
+                }
             }
 
 def add_mez(message, collected, sender, updates):
     mez_info = get_mez_info(message, sender)
     title, category = mez_info['title'], mez_info['category']
-    sender = mez_info['sender_username']
+    props = mez_info['props']
     if category in collected['data']:
         cat_info = collected['data'][category]
         if title in cat_info['data']:
             # add to updates
-            updates[title] = {'type': 'edit', 'sender': sender}
+            updates[title] = {'type': 'edit', 'sender': props['sender']}
         else:
             # add to updates
-            updates[title] = {'type': 'new', 'sender': sender}
+            updates[title] = {'type': 'new', 'sender': props['sender']}
             # increment the total count
             collected['count_eng'] += 1
             # increment the category count
             cat_info['count_eng'] += 1
             # convert the count number
             cat_info['count'] = geez_num(cat_info['count_eng'])
-        cat_info['data'][title] = mez_info
+        cat_info['data'][title] = props
     else:
         # increment the total count
         collected['count_eng'] += 1
         collected['data'][mez_info['category']] = {
                 'count': geez_num(1),
                 'count_eng': 1,
-                'data': {mez_info['title']: mez_info}
+                'data': {mez_info['title']: props}
                 }
     return collected, updates
 
@@ -156,7 +139,7 @@ def remove_mez(message, collected, updates):
     if category in collected['data']:
         if title in collected['data'][category]['data']:
             cat_info = collected['data'][category]
-            sender = cat_info['data'][title]['sender_username']
+            sender = cat_info['data'][title]['sender']
             updates[title] = {'type': 'remove', 'sender': sender}
             # update counts
             collected['count_eng'] -= 1

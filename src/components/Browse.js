@@ -25,11 +25,11 @@ export default (props) => {
                                         <span style={contactStyle}>
                                             <PersonIcon />
                                             <a
-                                                href={mez.sender_link}
+                                                href={'https://t.me/' + mez.sender}
                                                 style={contactLinkStyle}
                                                 target="_blank"
                                             >
-                                                {mez.sender_name}
+                                                {'@' + mez.sender}
                                             </a>
                                         </span>
                                     </React.Fragment>
@@ -55,11 +55,11 @@ export default (props) => {
                                         <span style={contactStyle}>
                                             <PersonIcon />
                                             <a
-                                                href={mez.sender_link}
+                                                href={'https://t.me/' + mez.sender}
                                                 style={contactLinkStyle}
                                                 target="_blank"
                                             >
-                                                {mez.sender_name}
+                                                {'@' + mez.sender}
                                             </a>
                                         </span>
                                     </React.Fragment>
