@@ -170,6 +170,7 @@ def merge_updates(client, chat, collected):
 
     result = search_messages(client, chat, collected['last_id'])
     messages = result.messages
+    messages.reverse()  # to get them in the order written
     updates = {'new': [], 'editted': [], 'removed': []}
     if messages: # there are new messages
         users = result.users
