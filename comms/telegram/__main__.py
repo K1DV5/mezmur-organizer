@@ -3,7 +3,7 @@
 from .date import convert_date
 from .number import geez_num
 from datetime import date
-from json import dump, load, loads
+from json import dump, dumps, load, loads
 from shutil import copy, move
 from glob import glob
 from os import path, remove
@@ -233,15 +233,17 @@ def build_doc():
         template = file.read()
     # bring the data
     with open('mez-data.json', encoding='utf-8') as file:
-        data = file.read()
+        data = loads(file.read())
     # build the final
     main_fname = f'dist/መዝሙር.html'
     with open(main_fname, 'w', encoding='utf-8') as file:
         # the main version
-        built = template.replace('{{mezmurData}}',
-                f'<script type="text/javascript">mezmurData = {data}</script>')
+        data_obj = sub('"(\\w+)":', '\\1:', dumps(data, separators=(',', ':'), ensure_ascii=False)).replace('\\', '\\\\')
+        built = sub(r'(?s)<script id="mezmurData".+?</script>',
+                f'<script type="text/javascript">const mezmurData = {data_obj}</script>',
+                template)
         # build the basic version
-        built = insert_basic(built, loads(data))
+        built = insert_basic(built, data)
         # write file
         file.write(built)
         print('Built document')
