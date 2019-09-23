@@ -39,5 +39,5 @@ def geez_num(n):
         #  clip the 00 at the end and the first if it is 1
         startPos = 1 if ret[0] == nums1[1] and len(ret) > 2 else 0
         return ret[startPos:-1]
-    return ''
+    return '-'
 
