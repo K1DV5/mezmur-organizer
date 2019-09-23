@@ -89,6 +89,14 @@ def search_messages(client, chat, min_id):
 
     return result
 
+def transliterate(amh):
+    with open(path.join(path.dirname(__file__), './amhMatch.json'), encoding='utf-8') as file:
+        lang_data = load(file)
+    eng = ''
+    for char in amh:
+       eng += lang_data[char] if char in lang_data else ' '
+    return eng
+
 def get_mez_info(message, sender):
     message_cont = message.message
     mez_data = extract_title(message_cont)
@@ -100,6 +108,7 @@ def get_mez_info(message, sender):
                 'body': mez_data['body'],
                 'id': message.id,
                 'date': convert_date(message.date.date()),
+                'title_eng': transliterate(mez_data['title']),
                 }
             }
 

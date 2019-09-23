@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Head from './components/Head'
-import filterEngData from './amhMatch.json'
 import Browse from './components/Browse'
 
 // the data is from the template html, has the following form:
@@ -47,14 +46,6 @@ class App extends React.Component {
         })
     }
 
-    transliterate(amh) {
-        let eng = ''
-        for (let char of amh) {
-            eng += filterEngData[char] || ' '
-        }
-        return eng
-    }
-
     getFilterableData(main) {
         let filterableList = []
         let data = main.data
@@ -64,7 +55,7 @@ class App extends React.Component {
                     title,
                     ...data[category].data[title],
                     category: category,
-                    titleEng: this.transliterate(title)
+                    titleEng: data[category].data[title].title_eng
                 })
             }
         }
