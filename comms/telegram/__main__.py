@@ -160,9 +160,12 @@ def remove_mez(message, collected, updates):
             updates[title] = {'type': 'remove', 'sender': sender}
             # update counts
             collected['count_eng'] -= 1
-            cat_info['count_eng'] -= 1
-            cat_info['count'] = geez_num(cat_info['count_eng'])
-            del cat_info['data'][title]
+            if cat_info['count_eng'] == 1:  # if it is the last of its kind
+                del collected['data'][category]
+            else:
+                cat_info['count_eng'] -= 1
+                cat_info['count'] = geez_num(cat_info['count_eng'])
+                del cat_info['data'][title]
     return collected, updates
 
 def merge_updates(client, chat, collected):
