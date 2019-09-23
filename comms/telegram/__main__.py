@@ -41,10 +41,10 @@ def get_client():
     except ConnectionError:
         print('Connection problem.')
 
-def get_chat(client):
-    entity = PeerChannel(1199760564)
-    # entity = PeerChannel('MezCollectorBot')
-    chat = client.get_entity(entity) # The main group
+def get_chat(client, username=None):
+    # default is the group chat
+    entity = PeerChannel(1199760564) if not username else username
+    chat = client.get_entity(entity)
     return chat
 
 def extract_title(mez: str):
@@ -120,24 +120,24 @@ def get_mez_info(message, sender):
             'date': convert_date(message.date.date()),
             }
 
-def add_mez(text, collected, sender, updates):
-    mez_info = get_mez_info(text, sender)
+def add_mez(message, collected, sender, updates):
+    mez_info = get_mez_info(message, sender)
     title, category = mez_info['title'], mez_info['category']
     sender = mez_info['sender_username']
     if category in collected['data']:
         cat_info = collected['data'][category]
-        if title not in cat_info['data']:
-            # add to updates, added: +
-            updates['new'].append({'title': title, 'sender': sender})
+        if title in cat_info['data']:
+            # add to updates
+            updates[title] = {'type': 'edit', 'sender': sender}
+        else:
+            # add to updates
+            updates[title] = {'type': 'new', 'sender': sender}
             # increment the total count
             collected['count_eng'] += 1
             # increment the category count
             cat_info['count_eng'] += 1
             # convert the count number
             cat_info['count'] = geez_num(cat_info['count_eng'])
-        else:
-            # add to updates, editted: *
-            updates['editted'].append({'title': title, 'sender': sender})
         cat_info['data'][title] = mez_info
     else:
         # increment the total count
@@ -149,15 +149,15 @@ def add_mez(text, collected, sender, updates):
                 }
     return collected, updates
 
-def remove_mez(text, collected, updates):
+def remove_mez(message, collected, updates):
     # remove existing
-    first_line = text[len(MEZ_BEGIN)+1:text.find('\n')]
-    category, title = first_line.split('/') if '/' in first_line else ('', first_line)
+    path = message.message[len(MEZ_BEGIN)+1:]
+    category, title = path.split('/') if path.count('/') == 1 else ('የምስጋና', path)
     if category in collected['data']:
         if title in collected['data'][category]['data']:
             cat_info = collected['data'][category]
             sender = cat_info['data'][title]['sender_username']
-            updates['removed'].append({'title': title, 'sender': sender})
+            updates[title] = {'type': 'remove', 'sender': sender}
             # update counts
             collected['count_eng'] -= 1
             cat_info['count_eng'] -= 1
@@ -171,7 +171,7 @@ def merge_updates(client, chat, collected):
     result = search_messages(client, chat, collected['last_id'])
     messages = result.messages
     messages.reverse()  # to get them in the order written
-    updates = {'new': [], 'editted': [], 'removed': []}
+    updates = {}
     if messages: # there are new messages
         users = result.users
 
@@ -182,11 +182,11 @@ def merge_updates(client, chat, collected):
             message_cont = message.message
             if message_cont:
                 message_cont = message_cont.strip()
-                if message_cont.startswith(MEZ_BEGIN):
+                if message_cont.startswith(MEZ_BEGIN):  # add or edit
                     sender = [user for user in users if message.from_id == user.id][0]
-                    collected, updates = add_mez(message_cont, collected, sender, updates)
-                elif message_cont.startswith('-' + MEZ_BEGIN):
-                    collected, updates = remove_mez(message_cont, collected, updates)
+                    collected, updates = add_mez(message, collected, sender, updates)
+                elif message_cont.startswith('-' + MEZ_BEGIN):  # delete
+                    collected, updates = remove_mez(message, collected, updates)
         # count data
         collected['count'] = geez_num(collected['count_eng'])
     return collected, updates
@@ -202,7 +202,7 @@ def update_data(client, chat):
 
     collected, updates = merge_updates(client, chat, collected)
 
-    if updates['new'] or updates['editted']:  # there are news
+    if updates:  # there are news
         with open(DATA_FILE, 'w', encoding='utf-8') as file:
             dump(collected, file, ensure_ascii=False)
 
@@ -263,15 +263,15 @@ def build_doc():
 
 def post_doc(client, chat, file, updates):
     caption = f'የ {TODAY} ዕትም'
-    if updates['new']:
-        new = [m['title'] + ' በ @' + m['sender'] for m in updates['new']]
-        caption += f"\nአዳዲስ የተጨመሩት፦\n \u2022 " + '\n \u2022 '.join(new)
-    if updates['editted']:
-        edits = [m['title'] + ' በ @' + m['sender'] for m in updates['editted']]
-        caption += f"\nየተስተካከሉት፦\n \u2022 " + '\n \u2022 '.join(edits)
-    if updates['removed']:
-        rems = [m['title'] + ' በ @' + m['sender'] for m in updates['editted']]
-        caption += f"\nየጠፉት፦\n \u2022 " + '\n \u2022 '.join(rems)
+    update_caps = {'new': [], 'edit': [], 'remove': []}
+    for title, props in updates.items():
+        update_caps[props['type']].append(title + ' በ @' + props['sender'])
+    if update_caps['new']:
+        caption += f"\nአዳዲስ የተጨመሩት፦\n \u2022 " + '\n \u2022 '.join(update_caps['new'])
+    if update_caps['edit']:
+        caption += f"\nየተስተካከሉት፦\n \u2022 " + '\n \u2022 '.join(update_caps['edit'])
+    if update_caps['remove']:
+        caption += f"\nየጠፉት፦\n \u2022 " + '\n \u2022 '.join(update_caps['remove'])
     client.send_file(chat, file, caption=caption)
     print('Uploaded doc.')
 

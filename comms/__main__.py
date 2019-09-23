@@ -42,14 +42,14 @@ if __name__ == '__main__':
         elif command == 'lbuild':
             # update data from telegram to drive
             client = get_client()
-            chat = get_chat(client)
+            chat = get_chat(client, 'me')
             updates = update_data(client, chat)
             if updates:  # None if there is no update
                 # to drive
-                update_file(service, 'mez-data.json', file_ids['mez-data.json'])
+                # update_file(service, 'mez-data.json', file_ids['mez-data.json'])
                 # post on telegram
                 file = build_doc()
-                # post_doc(client, chat, file, updates)
+                post_doc(client, chat, file, updates)
             else:
                 print('No new mez')
         elif command == 'ltemplate':
