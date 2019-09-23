@@ -20,7 +20,7 @@ function Line(props) {
 
 function Verse(props) {
     // like a paragraph, without any blank line
-    let text = props.children.replace('(', '[').replace(')', ']')
+    let text = props.children.replace(/\(([^\n]*?)\)/, '[$1]')  // for lines
 
     return (
         <div style={{marginBottom: '1em'}}>
