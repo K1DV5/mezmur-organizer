@@ -104,7 +104,7 @@ def get_mez_info(message, sender):
             'title': mez_data['title'],
             'category': mez_data['category'],
             'props': {
-                'sender': sender.username,
+                'sender': sender.username if sender.username else sender.phone,
                 'body': mez_data['body'],
                 'id': message.id,
                 'date': convert_date(message.date.date()),
@@ -167,7 +167,7 @@ def merge_updates(client, chat, collected):
     messages = result.messages
     messages.reverse()  # to get them in the order written
     updates = {}
-    if messages: # there are new messages
+    if messages:  # there are new messages
         users = result.users
 
         collected['date'] = TODAY
@@ -177,11 +177,13 @@ def merge_updates(client, chat, collected):
             message_cont = message.message
             if message_cont:
                 message_cont = message_cont.strip()
+                sender = [user for user in users if message.from_id == user.id][0]
                 if message_cont.startswith(MEZ_BEGIN):  # add or edit
-                    sender = [user for user in users if message.from_id == user.id][0]
                     collected, updates = add_mez(message, collected, sender, updates)
                 elif message_cont.startswith('-' + MEZ_BEGIN):  # delete
-                    collected, updates = remove_mez(message, collected, updates)
+                    # only if the sender is authorized
+                    if sender.phone in ['251921326733', '251941627376', '251920810739']:
+                        collected, updates = remove_mez(message, collected, updates)
         # count data
         collected['count'] = geez_num(collected['count_eng'])
     return collected, updates
