@@ -1,84 +1,70 @@
-import React from 'react'
-import AppBar from '@material-ui/core/AppBar'
-import ToolBar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import InputBase from '@material-ui/core/InputBase'
-import IconButton from '@material-ui/core/IconButton';
-import Grid from '@material-ui/core/Grid'
-import BackIcon from '@material-ui/icons/ArrowBack'
-import SearchIcon from '@material-ui/icons/Search'
-import CloseIcon from '@material-ui/icons/Close'
-import InputAdornment from '@material-ui/core/InputAdornment';
+/** @jsx preact.h */
+import preact from 'preact'
 
 export default (props) => {
-    let Title = props.Title ? props.Title : props.homeTitle
+    let Title, subtitle
+    if (props.Title) {
+        if (props.Title.includes('/')) {
+            // mez viewing
+            [Title, subtitle] = props.Title.split('/')
+            subtitle = subtitle.replace('-', ' ')
+        } else {
+            // mez list in category
+            Title = props.Title
+            subtitle = props.catCount + (props.catCount === '፩' ? ' መዝሙር' : ' መዝሙሮች')
+        }
+    } else {
+        // main category list
+        Title = props.homeTitle
+        subtitle = 'የ ' + props.date + ' ዕትም፣ ' + props.count + ' መዝሙሮች'
+    }
     Title = Title.includes('/') ? Title.split('/').slice(-2, -1) : Title
     return (
-        <div style={{width: '100%'}}>
-            <AppBar position="fixed" color="primary">
-                <ToolBar>
-                    {props.searchOpen? (
-                        <InputBase
-                            style={{color: 'white', width: '100%'}}
-                            autoFocus={true}
-                            startAdornment={(
-                            <InputAdornment>
-                                <SearchIcon style={{marginRight: 10}} />
-                            </InputAdornment>
-                            )}
-                            endAdornment={(
-                            <InputAdornment>
-                            <IconButton
-                                color="inherit"
-                                aria-label="Cancel"
-                                onClick={() => props.toggleSearch(false)}
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                            </InputAdornment>
-                            )}
-                            onChange={props.filterItems}
-                        />
+        <div style={{width: '100%', backgroundColor: '#adf', position: 'fixed', top: 0}}>
+            <div class="appbar">
+                <div class="toolbar">
+                    {props.searchOpen ? (
+                        <div style={{display: 'flex'}}>
+                            <input
+                                style={{flexGrow: 1}}
+                                autoFocus={true}
+                                onInput={props.filterItems}
+                            />
+                            <button onClick={() => props.toggleSearch(false)} >
+                                Close
+                            </button>
+                        </div>
                     ) : (
-                    <Grid container alignItems="center" wrap="nowrap" style={{width: '100%'}}>
-                        <Grid item style={{display: Title === props.homeTitle ? 'none' : ''}} >
-                            <IconButton
-                                color="inherit"
-                                aria-label="Menu"
-                                onClick={props.back}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                wrap: 'no-wrap',
+                                textOverflow: 'ellipsis',
+                                width: '100%'
+                            }}
                             >
-                                <BackIcon />
-                            </IconButton>
-                        </Grid>
-                        <Grid item style={{flexGrow: 1}} >
-                            <Typography
-                                style={{display: 'flex', alignItems: 'center'}}
-                                noWrap={true}
-                                variant="h6"
-                                color="inherit"
-                            >
-                                {Title}
-                            </Typography>
-                            <Typography
-                                variant="subtitle2"
-                                style={{display: Title === props.homeTitle ? '' : 'none'}}
-                            >
-                                {'የ ' + props.date + ' ዕትም፣ ' + props.count + ' መዝሙሮች'}
-                            </Typography>
-                        </Grid>
-                        <Grid item >
-                            <IconButton
-                                color="inherit"
-                                aria-label="Menu"
-                                onClick={() => props.toggleSearch(true)}
-                            >
-                                <SearchIcon />
-                            </IconButton>
-                        </Grid>
-                    </Grid>
-                    )}
-                </ToolBar>
-            </AppBar>
+                                <div class="item" style={{display: Title === props.homeTitle ? 'none' : ''}} >
+                                    <button onClick={props.back} >
+                                        Back
+                                    </button>
+                                </div>
+                                <div class="item" style={{flexGrow: 1}} >
+                                    <div class="typography" >
+                                        {Title}
+                                    </div>
+                                    <div class="typography" > {subtitle} </div>
+                                </div>
+                                <div class="item" >
+                                    <button
+                                        onClick={() => props.toggleSearch(true)}
+                                    >
+                                        Search
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                </div>
+            </div>
         </div>
     )
 }

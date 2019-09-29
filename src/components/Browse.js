@@ -1,8 +1,5 @@
-import React from 'react'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import PersonIcon from '@material-ui/icons/Person'
+/** @jsx preact.h */
+import preact from 'preact';
 import Viewer from './Viewer'
 
 export default (props) => {
@@ -14,46 +11,51 @@ export default (props) => {
     if (props.visibleItems) { // for filtered list
         return (
             props.visibleItems !== [] ? (
-                <List>
+                <div>
                     {props.visibleItems.map((mez, index) =>
-                        <ListItem key={index} button dense onClick={() => gotoPage(`${mez.category}/${mez.title.replace(' ', '-')}`)} >
-                            <ListItemText
-                                primary={mez.title}
-                                secondary={
-                                    <React.Fragment>
-                                        {mez.category + '፣ ' + mez.date}
-                                        <span style={contactStyle}>
-                                            <PersonIcon />
-                                            <a
-                                                href={'https://t.me/' + mez.sender}
-                                                style={contactLinkStyle}
-                                                target="_blank"
-                                            >
-                                                {'@' + mez.sender}
-                                            </a>
-                                        </span>
-                                    </React.Fragment>
-                                } />
-                        </ListItem>
+                        <div key={index} onClick={() => gotoPage(`${mez.category}/${mez.title.replace(' ', '-')}`)} >
+                            <div>
+                                <div>
+                                    {mez.title}
+                                </div>
+                                <div>
+                                    {
+                                        <preact.Fragment>
+                                            {mez.category + '፣ ' + mez.date}
+                                            <span style={contactStyle}>
+                                                <a
+                                                    href={'https://t.me/' + mez.sender}
+                                                    style={contactLinkStyle}
+                                                    target="_blank"
+                                                >
+                                                    {'@' + mez.sender}
+                                                </a>
+                                            </span>
+                                        </preact.Fragment>
+                                    }
+                                </div>
+                            </div>
+                        </div>
                     )}
-                </List>
+                </div>
             ) : <div>No results</div>
         )
     } else if (categories.includes(activePage)) { // list mez in category
         let titles = Object.keys(data[activePage].data)
         return (
-            <List>
+            <div>
                 {titles.map((title, index) => {
                     let mez = data[activePage].data[title]
                     return (
-                        <ListItem key={index} button dense onClick={() => gotoPage(`${activePage}/${title.replace(' ', '-')}`)} >
-                            <ListItemText
-                                primary={title}
-                                secondary={
-                                    <React.Fragment>
+                        <div onClick={() => gotoPage(`${activePage}/${title.replace(' ', '-')}`)} >
+                            <div>
+                                {title}
+                            </div>
+                            <div>
+                                {
+                                    <preact.Fragment>
                                         {mez.date}
                                         <span style={contactStyle}>
-                                            <PersonIcon />
                                             <a
                                                 href={'https://t.me/' + mez.sender}
                                                 style={contactLinkStyle}
@@ -62,12 +64,13 @@ export default (props) => {
                                                 {'@' + mez.sender}
                                             </a>
                                         </span>
-                                    </React.Fragment>
-                                } />
-                        </ListItem>
+                                    </preact.Fragment>
+                                }
+                            </div>
+                        </div>
                     )
                 })}
-            </List>
+            </div>
         )
     } else if (activePage) { // for viewing mez
         let [category, title] = activePage.split('/')
@@ -81,13 +84,18 @@ export default (props) => {
         }
     }
     return ( // default: list categories
-        <List>
+        <div>
             {categories.map((cat, index) => (
-                <ListItem key={index} button dense onClick={() => gotoPage(cat)} >
-                    <ListItemText primary={cat} secondary={data[cat].count + (data[cat].count_eng > 1 ? ' መዝሙሮች' : ' መዝሙር')} />
-                </ListItem>
+                <div key={index} onClick={() => gotoPage(cat)} >
+                    <div>
+                        {cat}
+                    </div>
+                    <div>
+                        {data[cat].count + (data[cat].count_eng > 1 ? ' መዝሙሮች' : ' መዝሙር')}
+                    </div>
+                </div>
             ))}
-        </List>
+        </div>
     )
 }
 

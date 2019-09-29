@@ -1,20 +1,24 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+/** @jsx preact.h */
+import preact from 'preact';
 import Head from './components/Head'
 import Browse from './components/Browse'
 
-// the data is from the template html, has the following form:
-console.info('\nThe data is in the variable "mezmurData".\n"copy(mezmurData)" to copy it to the clipboard.\n\n')
+// import m from '../mez-data.json'
+// mezmurData = m
 
-class App extends React.Component {
+// // the data is from the template html
+// console.info('\nThe data is in the variable "mezmurData".\n"copy(mezmurData)" to copy it to the clipboard.\n\n')
+
+class App extends preact.Component {
     constructor(props) {
         super(props)
         this.homeTitle = 'መዝሙር'
         this.state = {
             searchOpen: false,
             activePage: null,
-            barTitle: this.homeTitle,
-            visibleItems: null
+            barTitle: null,
+            visibleItems: null,
+            catCount: null
         }
         this.filterable = this.getFilterableData(mezmurData)
         this.getFilterableData = this.getFilterableData.bind(this)
@@ -25,17 +29,19 @@ class App extends React.Component {
     }
 
     gotoPage(path) {
+        let catCount = path && !path.includes('/') ? mezmurData.data[path.replace('-', ' ').trim()].count : null
         this.setState({
-            activePage: path, 
+            activePage: path,
             barTitle: path,
             visibleItems: null,
-            searchOpen: false
+            searchOpen: false,
+            catCount: catCount
         })
     }
 
     back() {
-        let currentPage = this.state.activePage? this.state.activePage : ''
-        let newPage = currentPage.includes('/')? currentPage.split('/', 1)[0] : null
+        let currentPage = this.state.activePage ? this.state.activePage : ''
+        let newPage = currentPage.includes('/') ? currentPage.split('/', 1)[0] : null
         this.gotoPage(newPage)
     }
 
@@ -84,27 +90,29 @@ class App extends React.Component {
         return (
             <div>
                 <Head
-                    style={{position: 'relative'}}
                     back={this.back}
                     searchOpen={this.state.searchOpen}
-                    toggleSearch = {this.toggleSearch}
+                    toggleSearch={this.toggleSearch}
                     Title={this.state.barTitle}
                     filterItems={this.filterItems}
                     homeTitle={this.homeTitle}
                     date={mezmurData.date}
                     count={mezmurData.count}
+                    catCount={this.state.catCount}
                 />
                 <div style={{padding: '.25em', marginTop: 56}}>
-                    <Browse
-                        data={mezmurData}
-                        gotoPage={this.gotoPage}
-                        activePage={this.state.activePage}
-                        visibleItems={this.state.visibleItems}
-                    />
+                    {
+                        <Browse
+                            data={mezmurData}
+                            gotoPage={this.gotoPage}
+                            activePage={this.state.activePage}
+                            visibleItems={this.state.visibleItems}
+                        />
+                    }
                 </div>
             </div>
         )
     }
 }
 
-ReactDOM.render(<App />, document.getElementById('app'))
+preact.render(<App />, document.getElementById('app'))

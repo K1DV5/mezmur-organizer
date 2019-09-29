@@ -1,26 +1,27 @@
-import React from 'react'
+/** @jsx preact.h */
+import preact from 'preact';
 
 function Line(props) {
     if (/\[.*?\]/.test(props.line)) {
         return (
-            <React.Fragment>{props.line.split(/\[([^]*?\] *[\u1369-\u1371])/).map((part, i) => {
+            <preact.Fragment>{props.line.split(/\[([^]*?\] *[\u1369-\u1371])/).map((part, i) => {
                 if (i % 2) { // in parens
                     let [text, number] = part.split(']')
-                    return <React.Fragment key={i}>
-                                <u>{text}</u> {number}
-                            </React.Fragment>
+                    return (<preact.Fragment key={i}>
+                        <u>{text}</u> {number}
+                    </preact.Fragment>)
                 }
-                return <React.Fragment key={i}>{part}</React.Fragment>
+                return <preact.Fragment key={i}>{part}</preact.Fragment>
             })}
-            </React.Fragment>
+            </preact.Fragment>
         )
     }
-    return props.line.trim()? props.line : null
+    return props.line.trim() ? props.line : null
 }
 
 function Verse(props) {
     // like a paragraph, without any blank line
-    let text = props.children.replace(/\(([^\n]*?)\)/, '[$1]')  // for lines
+    let text = props.children[0].replace(/\(([^\n]*?)\)/, '[$1]')  // for lines
 
     return (
         <div style={{marginBottom: '1em'}}>
@@ -38,10 +39,10 @@ function Verse(props) {
                         >
                             <div>
                                 {partLines.map((line, j) =>
-                                    <React.Fragment key={j}>
+                                    <preact.Fragment key={j}>
                                         <Line line={line} />
                                         <br />
-                                    </React.Fragment>)}
+                                    </preact.Fragment>)}
                             </div>
                             <div
                                 style={{
@@ -52,14 +53,14 @@ function Verse(props) {
                     )
                 } else {
                     return (
-                        <React.Fragment key={i}>
+                        <preact.Fragment key={i}>
                             {partLines.map((line, j) =>
-                                <React.Fragment key={j}>
+                                <preact.Fragment key={j}>
                                     <Line line={line} />
                                     <br />
-                                </React.Fragment>
+                                </preact.Fragment>
                             )}
-                        </React.Fragment>
+                        </preact.Fragment>
                     )
                 }
             })}
@@ -71,7 +72,7 @@ export default (props) => {
     return (
         <div>
             <h2>{props.title}</h2>
-            <div style={{fontSize: '19pt'}}>
+            <div>
                 {props.body.split('\n\n').map((verse, key) => {
                     if (verse.trim())
                         return <Verse key={key}>{verse.trim()}</Verse>
