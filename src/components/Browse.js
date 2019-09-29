@@ -13,12 +13,12 @@ export default (props) => {
             props.visibleItems !== [] ? (
                 <div>
                     {props.visibleItems.map((mez, index) =>
-                        <div key={index} onClick={() => gotoPage(`${mez.category}/${mez.title.replace(' ', '-')}`)} >
+                        <div style={listItemSyle} key={index} onClick={() => gotoPage(`${mez.category}/${mez.title.replace(' ', '-')}`)} >
                             <div>
                                 <div>
                                     {mez.title}
                                 </div>
-                                <div>
+                                <div style={secondaryTextStyle}>
                                     {
                                         <preact.Fragment>
                                             {mez.category + '፣ ' + mez.date}
@@ -47,11 +47,11 @@ export default (props) => {
                 {titles.map((title, index) => {
                     let mez = data[activePage].data[title]
                     return (
-                        <div onClick={() => gotoPage(`${activePage}/${title.replace(' ', '-')}`)} >
+                        <div style={listItemSyle} onClick={() => gotoPage(`${activePage}/${title.replace(' ', '-')}`)} >
                             <div>
                                 {title}
                             </div>
-                            <div>
+                            <div style={secondaryTextStyle}>
                                 {
                                     <preact.Fragment>
                                         {mez.date}
@@ -86,11 +86,11 @@ export default (props) => {
     return ( // default: list categories
         <div>
             {categories.map((cat, index) => (
-                <div key={index} onClick={() => gotoPage(cat)} >
+                <div style={listItemSyle} key={index} onClick={() => gotoPage(cat)} >
                     <div>
                         {cat}
                     </div>
-                    <div>
+                    <div style={secondaryTextStyle}>
                         {data[cat].count + (data[cat].count_eng > 1 ? ' መዝሙሮች' : ' መዝሙር')}
                     </div>
                 </div>
@@ -99,18 +99,20 @@ export default (props) => {
     )
 }
 
+let listItemSyle = {
+    margin: '0.5em 0.7em'
+}
+
 let contactStyle = {
     float: 'right',
-    style: 'inline-flex',
-    alignItems: 'center',
-    position: 'relative',
-    bottom: '.3em',
 }
 
 let contactLinkStyle = {
-    fontSize: 'smaller',
     textDecoration: 'none',
-    position: 'relative',
-    marginLeft: 3,
-    bottom: '.5em'
+}
+
+let secondaryTextStyle = {
+    color: '#777',
+    fontSize: '80%',
+    fontFamily: 'sans-serif'
 }

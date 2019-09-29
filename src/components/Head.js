@@ -18,53 +18,61 @@ export default (props) => {
         Title = props.homeTitle
         subtitle = 'የ ' + props.date + ' ዕትም፣ ' + props.count + ' መዝሙሮች'
     }
-    Title = Title.includes('/') ? Title.split('/').slice(-2, -1) : Title
+
     return (
-        <div style={{width: '100%', backgroundColor: '#adf', position: 'fixed', top: 0}}>
-            <div class="appbar">
-                <div class="toolbar">
-                    {props.searchOpen ? (
-                        <div style={{display: 'flex'}}>
-                            <input
-                                style={{flexGrow: 1}}
-                                autoFocus={true}
-                                onInput={props.filterItems}
-                            />
-                            <button onClick={() => props.toggleSearch(false)} >
-                                Close
-                            </button>
-                        </div>
-                    ) : (
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                wrap: 'no-wrap',
-                                textOverflow: 'ellipsis',
-                                width: '100%'
-                            }}
-                            >
-                                <div class="item" style={{display: Title === props.homeTitle ? 'none' : ''}} >
-                                    <button onClick={props.back} >
-                                        Back
-                                    </button>
-                                </div>
-                                <div class="item" style={{flexGrow: 1}} >
-                                    <div class="typography" >
-                                        {Title}
-                                    </div>
-                                    <div class="typography" > {subtitle} </div>
-                                </div>
-                                <div class="item" >
-                                    <button
-                                        onClick={() => props.toggleSearch(true)}
-                                    >
-                                        Search
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+        <preact.Fragment>
+            {props.searchOpen ? (
+                <div style={appBarStyle}>
+                    <input
+                        style={searchStyle}
+                        autofocus={true}
+                        onInput={props.filterItems}
+                    />
+                    <button style={{marginLeft: '1em'}} onClick={() => props.toggleSearch(false)} >
+                        Close
+                    </button>
                 </div>
-            </div>
-        </div>
+            ) : (
+                <div style={appBarStyle}>
+                    <button onClick={props.back} style={{display: Title === props.homeTitle ? 'none' : '', marginRight: '1em'}} >
+                        Back
+                    </button>
+                    <div style={{ flexGrow: 1 }} >
+                        <div style={{
+                            wrap: 'no-wrap',
+                            textOverflow: 'ellipsis',
+                        }} >
+                            {Title}
+                        </div>
+                        <div style={{fontSize: '80%'}} > {subtitle} </div>
+                    </div>
+                    <button style={{marginLeft: '1em'}} onClick={() => props.toggleSearch(true)} >
+                        Search
+                    </button>
+                </div>
+            )}
+        </preact.Fragment>
     )
+}
+
+let appBarStyle = {
+    width: '100%',
+    backgroundColor: '#4055B2',
+    boxShadow: '0 0 0.5em 0.3em #777',
+    color: 'white',
+    height: '2.1em',
+    padding: '1.5em',
+    position: 'fixed',
+    display: 'flex',
+    alignItems: 'center',
+    boxSizing: 'border-box',
+    top: 0,
+    left: 0
+}
+
+let searchStyle = {
+    flexGrow: 1,
+    background: 'transparent',
+    border: 'transparent',
+    color: 'white'
 }

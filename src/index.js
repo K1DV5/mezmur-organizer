@@ -6,8 +6,8 @@ import Browse from './components/Browse'
 // import m from '../mez-data.json'
 // mezmurData = m
 
-// // the data is from the template html
-// console.info('\nThe data is in the variable "mezmurData".\n"copy(mezmurData)" to copy it to the clipboard.\n\n')
+// the data is from the template html
+console.info('\nThe data is in the variable "mezmurData".\n"copy(mezmurData)" to copy it to the clipboard.\n\n')
 
 class App extends preact.Component {
     constructor(props) {
