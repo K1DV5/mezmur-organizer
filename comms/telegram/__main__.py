@@ -262,15 +262,17 @@ def build_doc():
 
 def post_doc(client, chat, file, updates):
     caption = f'የ {TODAY} ዕትም'
+    change_log = ''
     update_caps = {'new': [], 'edit': [], 'remove': []}
     for title, props in updates.items():
         update_caps[props['type']].append(title + ' በ @' + props['sender'])
     if update_caps['new']:
-        caption += f"\nአዳዲስ የተጨመሩት፦\n \u2022 " + '\n \u2022 '.join(update_caps['new'])
+        change_log += f"\nአዳዲስ የተጨመሩት፦\n \u2022 " + '\n \u2022 '.join(update_caps['new'])
     if update_caps['edit']:
-        caption += f"\nየተስተካከሉት፦\n \u2022 " + '\n \u2022 '.join(update_caps['edit'])
+        change_log += f"\nየተስተካከሉት፦\n \u2022 " + '\n \u2022 '.join(update_caps['edit'])
     if update_caps['remove']:
-        caption += f"\nየጠፉት፦\n \u2022 " + '\n \u2022 '.join(update_caps['remove'])
+        change_log += f"\nየጠፉት፦\n \u2022 " + '\n \u2022 '.join(update_caps['remove'])
     client.send_file(chat, file, caption=caption)
+    client.send_message(chat, change_log.strip())
     print('Uploaded doc.')
 
