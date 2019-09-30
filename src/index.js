@@ -2,6 +2,7 @@
 import preact from 'preact';
 import Head from './components/Head'
 import Browse from './components/Browse'
+import './index.css'
 
 // import m from '../mez-data.json'
 // mezmurData = m

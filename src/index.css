@@ -1,0 +1,69 @@
+.appbar {
+    width: 100%;
+    background-color: #4055B2;
+    box-shadow: 0 0 0.5em 0.3em #777;
+    color: white;
+    height: 2.1em;
+    padding: 1.5em;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    top: 0;
+    left: 0
+}
+
+.appbar-text {
+    flex-grow: 1
+}
+
+.appbar-title {
+    wrap: no-wrap;
+    text-overflow: ellipsis
+}
+
+.appbar-subtitle {
+    font-size: 80%
+}
+
+.searchbar {
+    flex-grow: 1;
+    background: transparent;
+    border: 0;
+    color: white
+}
+
+.searchbar:focus {
+    outline: none
+}
+
+.list-item {
+    margin: 0.5em 0.7em
+}
+
+.contact {
+    float: right;
+}
+
+.contact-link {
+    text-decoration: none;
+}
+
+.secondary-text {
+    color: #777;
+    font-size: 80%;
+    font-family: sans-serif
+}
+
+.icon {
+    fill: white;
+    margin-top: 0.4em
+}
+
+.right-icon {
+    margin-left: 1em;
+}
+
+.left-icon {
+    margin-right: 1em;
+}
