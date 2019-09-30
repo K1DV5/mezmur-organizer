@@ -7,11 +7,11 @@ function ListItem(props) {
     let contactText
     if (props.contact) {
         if (isNaN(props.contact)) {  // username
-            contactLink = '@' + props.contact
-            contactText = contactLink
-        } else { // phone number 2519...
             contactLink = 'https://t.me/' + props.contact
-            contactText = 'tel:+' + props.contact
+            contactText = '@' + props.contact
+        } else { // phone number 2519...
+            contactLink = 'tel:+' + props.contact
+            contactText = '+' + props.contact
         }
     }
     return (
