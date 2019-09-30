@@ -2,6 +2,39 @@
 import preact from 'preact';
 import Viewer from './Viewer'
 
+function ListItem(props) {
+    let contactLink
+    let contactText
+    if (props.contact) {
+        if (isNaN(props.contact)) {  // username
+            contactLink = '@' + props.contact
+            contactText = contactLink
+        } else { // phone number 2519...
+            contactLink = 'https://t.me/' + props.contact
+            contactText = 'tel:+' + props.contact
+        }
+    }
+    return (
+        <div class="list-item" onClick={props.onClick}>
+            {props.primary}
+            <div class="secondary-text">
+                {props.secondary}
+                {contactLink ?
+                    <span class="contact">
+                        <a
+                            href={contactLink}
+                            class="contact-link"
+                            target="_blank"
+                        >
+                            {contactText}
+                        </a>
+                    </span>
+                    : null}
+            </div>
+        </div>
+    )
+}
+
 export default (props) => {
     let activePage = props.activePage
     let data = props.data.data
@@ -13,29 +46,13 @@ export default (props) => {
             props.visibleItems !== [] ? (
                 <div>
                     {props.visibleItems.map((mez, index) =>
-                        <div style={listItemSyle} key={index} onClick={() => gotoPage(`${mez.category}/${mez.title.replace(' ', '-')}`)} >
-                            <div>
-                                <div>
-                                    {mez.title}
-                                </div>
-                                <div style={secondaryTextStyle}>
-                                    {
-                                        <preact.Fragment>
-                                            {mez.category + '፣ ' + mez.date}
-                                            <span style={contactStyle}>
-                                                <a
-                                                    href={'https://t.me/' + mez.sender}
-                                                    style={contactLinkStyle}
-                                                    target="_blank"
-                                                >
-                                                    {'@' + mez.sender}
-                                                </a>
-                                            </span>
-                                        </preact.Fragment>
-                                    }
-                                </div>
-                            </div>
-                        </div>
+                        <ListItem
+                            onClick={() => gotoPage(`${mez.category}/${mez.title.replace(' ', '-')}`)}
+                            key={index}
+                            primary={mez.title}
+                            secondary={mez.category + '፣ ' + mez.date}
+                            contact={mez.sender}
+                        />
                     )}
                 </div>
             ) : <div>No results</div>
@@ -47,27 +64,13 @@ export default (props) => {
                 {titles.map((title, index) => {
                     let mez = data[activePage].data[title]
                     return (
-                        <div style={listItemSyle} onClick={() => gotoPage(`${activePage}/${title.replace(' ', '-')}`)} >
-                            <div>
-                                {title}
-                            </div>
-                            <div style={secondaryTextStyle}>
-                                {
-                                    <preact.Fragment>
-                                        {mez.date}
-                                        <span style={contactStyle}>
-                                            <a
-                                                href={'https://t.me/' + mez.sender}
-                                                style={contactLinkStyle}
-                                                target="_blank"
-                                            >
-                                                {'@' + mez.sender}
-                                            </a>
-                                        </span>
-                                    </preact.Fragment>
-                                }
-                            </div>
-                        </div>
+                        <ListItem
+                            onClick={() => gotoPage(`${activePage}/${title.replace(' ', '-')}`)}
+                            key={index}
+                            primary={title}
+                            secondary={mez.date}
+                            contact={mez.sender}
+                        />
                     )
                 })}
             </div>
@@ -85,34 +88,15 @@ export default (props) => {
     }
     return ( // default: list categories
         <div>
-            {categories.map((cat, index) => (
-                <div style={listItemSyle} key={index} onClick={() => gotoPage(cat)} >
-                    <div>
-                        {cat}
-                    </div>
-                    <div style={secondaryTextStyle}>
-                        {data[cat].count + (data[cat].count_eng > 1 ? ' መዝሙሮች' : ' መዝሙር')}
-                    </div>
-                </div>
-            ))}
+            {categories.map((cat, index) =>
+                <ListItem
+                    onClick={() => gotoPage(cat)}
+                    key={index}
+                    primary={cat}
+                    secondary={data[cat].count + (data[cat].count_eng > 1 ? ' መዝሙሮች' : ' መዝሙር')}
+                />
+            )}
         </div>
     )
 }
 
-let listItemSyle = {
-    margin: '0.5em 0.7em'
-}
-
-let contactStyle = {
-    float: 'right',
-}
-
-let contactLinkStyle = {
-    textDecoration: 'none',
-}
-
-let secondaryTextStyle = {
-    color: '#777',
-    fontSize: '80%',
-    fontFamily: 'sans-serif'
-}
