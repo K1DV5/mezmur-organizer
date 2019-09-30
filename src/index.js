@@ -101,7 +101,7 @@ class App extends preact.Component {
                     count={mezmurData.count}
                     catCount={this.state.catCount}
                 />
-                <div style={{padding: '.25em', marginTop: 56}}>
+                <div class="content">
                     {
                         <Browse
                             data={mezmurData}
