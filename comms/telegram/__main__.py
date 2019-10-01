@@ -104,7 +104,7 @@ def get_mez_info(message, sender):
             'title': mez_data['title'],
             'category': mez_data['category'],
             'props': {
-                'sender': sender.username if sender.username else sender.phone,
+                'sender': '@' + sender.username if sender.username else '+' + sender.phone,
                 'body': mez_data['body'],
                 'id': message.id,
                 'date': convert_date(message.date.date()),
@@ -265,7 +265,7 @@ def post_doc(client, chat, file, updates):
     change_log = ''
     update_caps = {'new': [], 'edit': [], 'remove': []}
     for title, props in updates.items():
-        update_caps[props['type']].append(title + ' በ @' + props['sender'])
+        update_caps[props['type']].append(title + ' በ ' + props['sender'])
     if update_caps['new']:
         change_log += f"\nአዳዲስ የተጨመሩት፦\n \u2022 " + '\n \u2022 '.join(update_caps['new'])
     if update_caps['edit']:
