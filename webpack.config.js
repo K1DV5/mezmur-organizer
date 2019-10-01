@@ -1,4 +1,5 @@
 const path = require('path')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
@@ -23,7 +24,7 @@ module.exports = {
             },
             {
                 test: /\.css/,
-                use: ['style-loader', 'css-loader']
+                use: [MiniCssExtractPlugin.loader, 'css-loader']
             }
         ]
     },
@@ -32,7 +33,11 @@ module.exports = {
             template: './src/index.html',
             inlineSource: '.(js|css)$' // embed all javascript and css inline
         }),
-        new HtmlWebpackInlineSourcePlugin()
+        new HtmlWebpackInlineSourcePlugin(),
+        new MiniCssExtractPlugin({
+            filename: "[name].css",
+            chunkFilename: "[id].css"
+        })
     ],
     optimization: {
         minimizer: [
