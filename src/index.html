@@ -1,71 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>መዝሙር</title>
-    <style>
-        body {
-            margin: 0;
-        }
-    </style>
-
-    <!-- for the basic version -->
-    <noscript>
-        <style>
-            a {
-                color: #158;
-                text-decoration: none;
-            }
-
-            .toc-cat {
-                display: block;
-            }
-
-            .toc-mez {
-                display: block;
-                margin-left: 2em;
-            }
-        </style>
-    </noscript>
-    <script id="mezmurData" type="text/javascript">
-        // for testing purposes
-        let mezmurData = {
-            "data": {
-                "አጫጭር": {
-                    "count": "፩",
-                    "count_eng": 1,
-                    "data": {
-                        "አንተኑ ፋኑኤል": {
-                            "sender": "K1DV5",
-                            "body": "አንተኑ ፋኑኤል (መና)፫ መና ዘአውርድከ መና\n(ወአንተኑ ለድንግል ዘአውርድከ መና\nወአንተኑ ለድንግል ዘአውርድከ መና) ፪\n\nወአንተኑ ለድንግል ዘአውርድከ መና\nወአንተኑ ለድንግል ዘአውርድከ መና",
-                            "id": 1102,
-                            "date": "ማክሰኞ ፩ ፮ ፳፻፲፪ ዓ.ም."
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>መዝሙር</title>
+        <script id="mezmurData" type="text/javascript">
+            // for testing purposes
+            let mezmurData = {
+                "data": {
+                    "አጫጭር": {
+                        "count": "፩",
+                        "count_eng": 1,
+                        "data": {
+                            "አንተኑ ፋኑኤል": {
+                                "sender": "K1DV5",
+                                "body": "አንተኑ ፋኑኤል (መና)፫ መና ዘአውርድከ መና\n(ወአንተኑ ለድንግል ዘአውርድከ መና\nወአንተኑ ለድንግል ዘአውርድከ መና) ፪\n\nወአንተኑ ለድንግል ዘአውርድከ መና\nወአንተኑ ለድንግል ዘአውርድከ መና",
+                                "id": 1102,
+                                "date": "ማክሰኞ ፩ ፮ ፳፻፲፪ ዓ.ም."
+                            }
                         }
                     }
-                }
-            },
-            "count_eng": 1,
-            "last_id": 1102,
-            "count": "፩",
-            "date": "ማክሰኞ ፩ ፮ ፳፻፲፪ ዓ.ም."
-        }
-    </script>
-</head>
+                },
+                "count_eng": 1,
+                "last_id": 1102,
+                "count": "፩",
+                "date": "ማክሰኞ ፩ ፮ ፳፻፲፪ ዓ.ም."
+            }
+        </script>
+    </head>
 
-<body>
-    <div id="app"></div>
+    <body>
+        <div id="app"></div>
 
-    <!-- the basic version -->
-    <noscript>
-        <h1 class="title">መዝሙር</h1>
-        <small class="subtitle">{{basicSubtitle}}</small>
-        <nav class="toc">{{basicToc}}</nav>
-        <div class="content">{{basicMain}}</div>
-    </noscript>
+        <!-- the basic version -->
+        <noscript>
+            <div class="appbar">
+                <div class="appbar-text">
+                    <div class="appbar-title">
+                        መዝሙር
+                    </div>
+                    <div class="appbar-subtitle"> {{basicSubtitle}} </div>
+                </div>
+            </div>
+            <div class="content">
+                <nav class="toc">{{basicToc}}</nav>
+                <div class="content">{{basicMain}}</div>
+            </div>
+        </noscript>
 
-</body>
-
+    </body>
 </html>

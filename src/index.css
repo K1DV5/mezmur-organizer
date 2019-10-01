@@ -1,3 +1,12 @@
+body {
+    margin: 0;
+}
+
+a {
+    color: #158;
+    text-decoration: none;
+}
+
 .appbar {
     width: 100%;
     background-color: #4055B2;
@@ -74,4 +83,14 @@
 
 .left-icon {
     margin-right: 1em;
+}
+
+/* ================= FOR THE BASIC VERSION ============= */
+.toc-cat {
+    display: block;
+}
+
+.toc-mez {
+    display: block;
+    margin-left: 2em;
 }
