@@ -59,6 +59,8 @@ if __name__ == '__main__':
             download_file(service, 'mez-data.json', file_ids['mez-data.json'])
         elif command == 'lupdatedata':
             update_file(service, 'mez-data.json', file_ids['mez-data.json'])
+        elif command == 'lbuild-only':
+            build_doc()
         else:
             raise ValueError('Command should be in [bot, build, template]')
     else:
