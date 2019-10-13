@@ -165,13 +165,13 @@ def merge_updates(client, chat, collected):
 
     result = search_messages(client, chat, collected['last_id'])
     messages = result.messages
-    messages.reverse()  # to get them in the order written
     updates = {}
     if messages:  # there are new messages
         users = result.users
 
         collected['date'] = TODAY
         collected['last_id'] = messages[0].id
+        messages.reverse()  # to get them in the order written
 
         for message in messages:
             message_cont = message.message
