@@ -14,7 +14,8 @@ jobs:
         touch t.test
         echo "foo bar" > t.test
         git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
-        git pull github ${GITHUB_REF} --ff-only
+        git config --global user.email kidusadugna@gmail.com
+        git config --global user.name $GITHUB_ACTOR
         git add .
         git commit -m "Update trial file"
         git push github HEAD:${GITHUB_REF}
