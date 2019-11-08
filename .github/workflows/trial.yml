@@ -9,6 +9,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: add identity
+      run: |
+        git config user.email "kidusadugna@gmail.com"
+        git config user.name "K1DV5"
     - name: create a file and commit it
       run: |
         touch t.test
