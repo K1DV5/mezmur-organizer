@@ -21,8 +21,10 @@ jobs:
               env:
                   FILE_IDS: ${{secrets.DRIVE_FILE_IDS}}
                   TOKEN_DATA: ${{secrets.DRIVE_TOKEN_DATA}}
+                  TG_SESSION: ${{secrets.TG_SESSION}}
               run: |
                 echo $FILE_IDS > drive_file_ids.json
                 echo $TOKEN_DATA > drive_token.json
+                echo $TG_SESSION > .session
             - name: get needed files from drive, update data and post
               run:  python3 -m comms build

@@ -17,8 +17,7 @@ if __name__ == '__main__':
             file_ids = json.load(file)
         command = argv[1]
         if command == 'build':  # once a week or so
-            # download session file, data, template
-            download_file(service, 'K1DV5.session', file_ids['K1DV5.session'])
+            # download data, template
             download_file(service, 'mez-data.json', file_ids['mez-data.json'])
             makedirs('dist', exist_ok=True)
             download_file(service, 'dist/index.html', file_ids['index.html'])

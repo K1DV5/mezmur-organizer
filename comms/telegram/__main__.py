@@ -10,6 +10,7 @@ from os import path, remove
 from re import sub
 
 from telethon.sync import TelegramClient
+from telethon.sessions import StringSession
 from telethon.tl.types import PeerChannel, InputMessagesFilterEmpty
 from telethon.tl.functions.messages import SearchRequest
 
@@ -24,9 +25,11 @@ api_id = 17349
 api_hash = '344583e45741c457fe1862106095a5eb'
 phone = '+251920810739'
 username = 'K1DV5'
+with open('.session') as file:
+    session = file.read().strip()
 
 def get_client():
-    client = TelegramClient(username, api_id, api_hash)
+    client = TelegramClient(StringSession(session), api_id, api_hash)
     try:
         client.connect()
         # Ensure you're authorized
