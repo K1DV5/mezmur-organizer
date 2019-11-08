@@ -1,0 +1,16 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: create a file and commit it
+      run: |
+        touch t.test
+        git add .
+        git commit -m "add a trial file"
