@@ -9,12 +9,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: add identity
-      run: |
-        git config user.email "kidusadugna@gmail.com"
-        git config user.name "K1DV5"
     - name: create a file and commit it
       run: |
         touch t.test
+        echo "foo bar" > t.test
+        git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
         git add .
-        git commit -m "add a trial file"
+        git commit -m "Update trial file"
+        git push github HEAD:${GITHUB_REF}
